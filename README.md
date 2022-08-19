@@ -2,13 +2,21 @@
 
 "pick the color" is a simple idea with many different ways to play. There are 4 different modes for you to choose from: Multiplayer, Speedrun, Adventure, and Practice. Each mode will test you on how well you can determine the values of a digital color.
 
+![Home Screen](https://i.imgur.com/JSvofRB.png)
+
 Multiplayer (2 player only) allows you and another player to compete against each other to see who can determine color values most accurately. You'll be prompted to enter a name for each player, and the game will start after player one starts their timer. Each player will have 30 seconds to guess their displayed color with a total of 5 rounds. Once completed, the winner will be calculated and displayed.
+
+![PvP and Speedrun Screen](https://i.imgur.com/Rd41TO0.png)
 
 Speedrun Mode tests how fast and accurate you can determine colors displayed on a screen. Five random colors will be presented to you and you'll have to guess each one as fast as possible to get the highest score.
 
 Adventure Mode will place you in a box where you'll have to defend your territory by destroying boxes. Each box will have specific color and a random color value will be presented for you destroy. Destroy the wrong one and you'll lose a life. Allowing the wrong box inside will also lose you a life. Lose too many lives and you'll lose the game. 
 
+![Adventure Mode Screen](https://i.imgur.com/PADj5IU.png)
+
 Practice Mode lets you hone your color evaluating skills to your heart's content. Infinitely guess the displayed color and see how close you get every time. You'll be able to see your most previous estimate after every guess
+
+![Practice Mode](https://i.imgur.com/QNjuVuw.png)
 
 # MVP Goals:
 ## PvP:
@@ -21,6 +29,7 @@ Practice Mode lets you hone your color evaluating skills to your heart's content
 - Display total and each guess accuracy and winner after all 10 guesses + correct values
 - Prompt players to restart game or return home
   - If restarted, prompt players to use same or different usernames
+
 ## PvE:
 - Win condition: Complete the 5 levels in Adventure Mode
 - Prompt player to enter custom name
