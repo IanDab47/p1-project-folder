@@ -1,0 +1,210 @@
+/* SILKSCREEN */
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
+/* LATO */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0 auto;
+    cursor: default;
+}
+
+*:hover, 
+*:focus{
+    outline: none;
+    border: none;
+    stroke: none;
+}
+
+:root {
+    --clr-red: #f33;
+    --clr-grn: #3d3;
+    --clr-blu: #33f;
+    --clr-cyn-1: #0ff;
+    --clr-cyn-2: #066;
+    --clr-yel-1: #ff0;
+    --clr-yel-2: #770;
+    --clr-mag-1: #f0f;
+    --clr-mag-2: #604;
+    --clr-blk: black;
+    --clr-wht: #f1f1f1;
+    --clr-drk-1: #333;
+    --clr-drk-2: #666;
+    --clr-drk-act: #400;
+    --clr-lig-1: #ddd;
+    --clr-lig-2: #aaa;
+    --clr-lig-act: #ddf;
+}
+
+/* TEST CLASS */
+.test {
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    background: hotpink;
+}
+
+/* HOME PAGE */
+body {
+    background-color: var(--clr-drk-1);
+    margin-top: 40px;
+    z-index: 1;
+}
+
+main {
+    /* z-index: -1; */
+}
+
+main h1{
+    font-family: Silkscreen, monospace;
+    font-size: 6em;
+    /* line-height: 0; */
+    text-align: center;
+    color: var(--clr-drk-2);
+}
+
+footer {
+    position: relative;
+    height: 5vh;
+    background-color: var(--clr-lig-act);
+}
+
+.title {
+    display: flex;
+    flex-wrap: wrap; flex-direction: column;
+    height: 40vh;
+}
+
+.home-button-container {
+    margin: 5vh auto;
+    display: flex;
+    flex-direction: column;         flex-wrap: wrap;
+    justify-content: space-evenly;  align-items: center;
+    height: 40vh;
+}
+
+.home-button {
+    cursor: pointer;
+    text-align: center;
+    background-color: var(--clr-drk-2);
+    font-family: Lato, monospace;
+    font-size: 1.1rem; font-weight: 400;
+    padding: 0.7em 2.4em;
+    border: none; border-radius: 2em;
+    box-shadow: 0 0 .6em .1em var(--clr-drk-2);
+
+    transition: box-shadow 120ms ease-out,
+                padding 120ms ease-in-out,
+                font-size 120ms ease-out,
+                border-radius 120ms ease-out,
+                font-weight 120ms ease-out  
+    ;
+}
+
+.home-button:hover,
+.home-button:focus {
+    font-size: 1.9rem; font-weight: 300;
+    box-shadow: 0 0 1.2em -.1em var(--clr-lig-1);
+    padding: .55em 7em;
+    border-radius: 1em;
+
+    transition: box-shadow 400ms ease-out,
+                padding 180ms ease-in-out 120ms,
+                font-size 200ms ease-out,
+                border-radius 120ms ease-out 200ms,
+                font-weight 180ms ease-out
+    ;
+}
+
+/* .disabled {
+    text-align: center;
+    background-color: var(--clr-drk-2);
+    font-family: Lato, monospace;
+    font-size: 1.1rem; font-weight: 400;
+    padding: 0.7em 2.4em;
+    border: none; border-radius: 2em;
+    box-shadow: 0 0 .6em .1em var(--clr-drk-2);
+} */
+
+.game-container {
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: center; align-items: center;
+    background-color: transparent;
+    width: 100vw;
+    height: 94vh;
+    z-index: -1;
+}
+
+.menu-name {
+    /* margin-top: 1vh; */
+    font-family: lato, sans-serif;
+    font-size: 1.2rem; font-weight: 900;
+    /* position: absolute; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; align-items: center;
+    padding-top: -1em; gap: 1.1em;
+    width: 45vw; height: 20vh;
+    border-radius: 4vh;
+    background-color: var(--clr-lig-act);
+}
+
+.menu-name input {
+    /* background-color: white; */
+    height: 2em;
+    border: none; border-radius: 4px; 
+    box-shadow: inset 0 0 12px -9px rgb(0 0 0 / 1)
+}
+
+.timed-clr {
+    background-color: var(--clr-drk-2);
+    position: absolute;
+    width: 33vw;
+    height: 100%;
+    right: 0;
+}
+
+#title-pick,
+#title-the,
+#title-color {
+    color: var(--clr-lig-2);
+}
+
+#title-pick:hover {
+    color: var(--clr-red);
+}
+
+#title-the:hover {
+    color: var(--clr-grn);
+}
+
+#title-color:hover {
+    color: var(--clr-blu);
+}
+
+#pvp:hover,
+#pvp:focus {
+    background-color: var(--clr-cyn-1);
+    color: var(--clr-cyn-2)
+
+}
+
+#spd:hover,
+#spd:focus {
+    background-color: var(--clr-yel-1);
+    color: var(--clr-yel-2)
+}
+
+#adv:hover,
+#adv:focus {
+    background-color: var(--clr-mag-1);
+    color: var(--clr-mag-2)
+}
+
+#prac:hover,
+#prac:focus {
+    background-color: var(--clr-blk);
+    color: var(--clr-lig-1)
+}
