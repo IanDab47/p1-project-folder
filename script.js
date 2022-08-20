@@ -16,7 +16,7 @@ class Player {
 
     giveName(name) {
         this.name = name
-        console.log(`This player's name is ${name}`)
+        // console.log(`This player's name is ${name}`)
     }
     newGuess(guess) {
         this.guesses.push(guess)
@@ -24,7 +24,6 @@ class Player {
 }
 const plyrOne = new Player()
 const plyrTwo = new Player()
-
 
 const cycleHomeBtns = () => {
     if(homeTgl) {
@@ -42,22 +41,21 @@ const cycleHomeBtns = () => {
 }
 
 const genTimedLayout = (gameType) => {
-    console.log('genTimedLayout is actually running')
-    gameCtnr.style.zIndex = 10
-    // const mainBG = document.createElement('div')
+    // Create elements for the timed layout design
     const clrBG = document.createElement('div')
-    
-    clrBG.classList.add('test')
-    // clrBG.classList.add('test')
-    
-    // mainBG.style.color = 'var(--clr-lig-1)'
-    // clrBG.style.color = 'var(--clr-drk-2)'
-    
-    gameCtnr.append(clrBG)
+    const prmpt = document.createElement('div')
+    const timer = document.createElement('div')
+    const prmptEntr = document.createElement('input')
+
+    // Assign corresponding classes to elements
+    clrBG.classList.add('timed-clr')
+
+    // Generate initial layout
+    gameCtnr.style.background = 'linear-gradient(60deg, var(--clr-drk-1) 10%, var(--clr-drk-2) 70%, var(--clr-drk-2))'
+    gameCtnr.appendChild(clrBG)
 }
 
 const promptMultiplayer = () => {
-    // Declare name variables
     // Brings Game Screen Forward
     gameCtnr.style.zIndex = 10
 
@@ -75,7 +73,7 @@ const promptMultiplayer = () => {
     menuNameTwo.classList.add('menu-name')
 
     // Give menus text
-    menuNameOne.innerText = 'Enter the name of the first player:'
+    menuNameOne.innerText = 'Enter the name of the First Player:'
     menuNameTwo.innerText = 'Enter the name of the second player:'
     inputNameOne.type = 'text'
     inputNameTwo.type = 'text'
@@ -90,31 +88,34 @@ const promptMultiplayer = () => {
 
         // Submit player 1 name and switch to player 2 menu
         plyrOne.giveName(inputNameOne.value)
-        inputNameOne.removeEventListener('submit', () => {})
+        nameFormOne.removeEventListener('submit', (e) => {e.preventDefault()})
         menuNameOne.remove(inputNameOne)
         nameFormOne.remove(menuNameOne)
         gameCtnr.append(nameFormTwo)
         nameFormTwo.append(menuNameTwo)
+        inputNameTwo.focus()
         
         // Repeat menu processing for Player 2
         nameFormTwo.addEventListener('submit', (e) => {
             e.preventDefault()
-    
+            
             // Submit player 2 name and switch to Game
             plyrTwo.giveName(inputNameTwo.value)
-            inputNameTwo.removeEventListener('submit', () => {})
+            nameFormTwo.removeEventListener('submit', (e) => {e.preventDefault()})
             menuNameTwo.remove(inputNameTwo)
             nameFormTwo.remove(menuNameTwo)
-            gameCtnr.remove(nameFormTwo)
-
+            // gameCtnr.remove(nameFormTwo)
+            
             // Generates Timed Layout
-            genTimedLayout('Multiplayer')
+            // genTimedLayout('Multiplayer')
+            genTimedLayout()
         })
     })
-
+    
     // Display first menu
     gameCtnr.append(nameFormOne)
     nameFormOne.append(menuNameOne)
+    inputNameOne.focus()
     // Continue Player 1 processing -->
 }
 
@@ -122,6 +123,7 @@ const startMulti = () => {
     homeTgl++
     cycleHomeBtns()
     promptMultiplayer()
+    // genTimedLayout()
 }
 
 const startSpeed = () => {
