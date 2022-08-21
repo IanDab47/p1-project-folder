@@ -97,10 +97,17 @@ const genTimedLayout = (gameType) => {
     const rndEnd = document.createElement('button')
     const plyrGuessForm = document.createElement('form')
 
+    let hi = ''
+
     // --> Return here for game function
     const gameStart = () => {
+        hi += 'hi'
+        console.log(hi)
         rndStart.addEventListener('click', () => {
+            console.log(hi)
+            // Enable player submission
             plyrGuessForm.removeEventListener('submit', () => {})
+
             // Make start timer do nothing if clicked again
             rndStart.removeEventListener('click', () => {})
 
@@ -114,22 +121,25 @@ const genTimedLayout = (gameType) => {
                 // Start countdown timer
                 tick = 30000   // 30 seconds
                 const countDown = setInterval(countDownTimer, mspf)
+
+                // Submission function
                 plyrGuessForm.addEventListener('submit', (e) => {
+                    console.log(hi)
                     // Finish round
                     e.preventDefault()
                     clearInterval(countDown)
 
                     // Add guess to player guesses and clear input
-                    console.log(plyrTurn())
-                    if(plyrTurn() == 0 && plyrTwo.guessProtect()) {plyrTwo.newGuess(plyrGuess.value)}
-                    else if(plyrOne.guessProtect()) {plyrOne.newGuess(plyrGuess.value)}
-                    plyrGuess.value = ' '
+                    if(plyrTurn() == 0 && guessProtect(plyrTwo)) {plyrTwo.newGuess(plyrGuess.value)}
+                    else if(guessProtect(plyrOne)) {plyrOne.newGuess(plyrGuess.value)}
+                    plyrGuess.value = ''
 
                     console.log(plyrOne.guesses)
                     console.log(plyrTwo.guesses)
+                    console.log(gameClrs)
 
                     // Check if game is ongoing or finished
-                    if(gameClrs.length <= rounds * 2) {gameStart()}
+                    if(gameClrs.length <= rounds * 2) {return}
                     else {gameEnd()}
                 })
             }
@@ -137,7 +147,7 @@ const genTimedLayout = (gameType) => {
     }
 
     const gameEnd = () => {
-
+        console.log('We have a winner!')
     }
 
     const countDownTimer = () => {
@@ -152,6 +162,7 @@ const genTimedLayout = (gameType) => {
         
         // Mark down tick for timer
         if(tick > 0) {tick -= mspf}
+        if(tick <= 0) {tick = 0}
         
         // Update Timer
         timeDisplay.innerText = `${min}:${sec}.${mSec}`
@@ -163,9 +174,8 @@ const genTimedLayout = (gameType) => {
     }
 
     // Prevents extra guesses during game
-    const guessProtect = () => {
-        console.log(this.guesses.length < Math.ceil(gameClrs.length / 2))
-        return this.guesses.length < Math.ceil(gameClrs.length / 2)
+    const guessProtect = (player) => {
+        return player.guesses.length < Math.ceil(gameClrs.length / 2)
     }
 
     // Assign corresponding classes to elements
@@ -188,8 +198,6 @@ const genTimedLayout = (gameType) => {
     rndStart.innerText = 'Start Timer'
     plyrGuess.placeholder = '#00FFCC'
     rndEnd.innerText = 'Enter Guess'
-    // if(gameType === 'pvp') {secDiv.innerText = 30}
-    // if(gameType === 'spd') {second.innerText = 0}
 
     //   :: SECURITY MEASURES ::   //
     // Prevents early player submission to refresh page
@@ -201,6 +209,7 @@ const genTimedLayout = (gameType) => {
     gameCtnr.append(clrBG, fillBox, timeDisplay)
 
     // Start game after Timer clicked
+    console.log('ran again')
     gameStart()
     // Continue game function -->
 }
@@ -272,8 +281,8 @@ const promptMultiplayer = () => {
 const startMulti = () => {
     homeTgl++
     cycleHomeBtns()
-    promptMultiplayer()
-    // genTimedLayout('pvp')
+    // promptMultiplayer()
+    genTimedLayout('pvp')
 }
 
 const startSpeed = () => {
