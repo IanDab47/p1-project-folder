@@ -1,5 +1,6 @@
 let homeTgl = 0
 let tick = 0
+const mspf = 33
 
 const pvpBtn = document.querySelector('#pvp')
 const spdBtn = document.querySelector('#spd')
@@ -94,6 +95,78 @@ const genTimedLayout = (gameType) => {
     const plyrGuess = document.createElement('input')
     const rndStart = document.createElement('button')
     const rndEnd = document.createElement('button')
+    const plyrGuessForm = document.createElement('form')
+
+    // --> Return here for game function
+    const gameStart = () => {
+        rndStart.addEventListener('click', () => {
+            plyrGuessForm.removeEventListener('submit', () => {})
+            // Make start timer do nothing if clicked again
+            rndStart.removeEventListener('click', () => {})
+
+            // Display color to guess
+            newClr = newHexCode()
+            clrBG.style.background = `#${newClr}`
+            gameClrs.push(newClr)
+
+            // PVP GAME FUNCTION //
+            if(gameType = 'pvp') {
+                // Start countdown timer
+                tick = 30000   // 30 seconds
+                const countDown = setInterval(countDownTimer, mspf)
+                plyrGuessForm.addEventListener('submit', (e) => {
+                    // Finish round
+                    e.preventDefault()
+                    clearInterval(countDown)
+
+                    // Add guess to player guesses and clear input
+                    console.log(plyrTurn())
+                    if(plyrTurn() == 0 && plyrTwo.guessProtect()) {plyrTwo.newGuess(plyrGuess.value)}
+                    else if(plyrOne.guessProtect()) {plyrOne.newGuess(plyrGuess.value)}
+                    plyrGuess.value = ' '
+
+                    console.log(plyrOne.guesses)
+                    console.log(plyrTwo.guesses)
+
+                    // Check if game is ongoing or finished
+                    if(gameClrs.length <= rounds * 2) {gameStart()}
+                    else {gameEnd()}
+                })
+            }
+        })
+    }
+
+    const gameEnd = () => {
+
+    }
+
+    const countDownTimer = () => {
+        // Setup leading zeroes for timer
+        let msZero = 3
+        let secZero = 2
+        
+        // Make variables for updating timer numbers
+        const min = zeroPad(0, 2)
+        const sec = zeroPad(Math.floor(tick / 1000), secZero)
+        const mSec = zeroPad(tick % 1000, msZero)
+        
+        // Mark down tick for timer
+        if(tick > 0) {tick -= mspf}
+        
+        // Update Timer
+        timeDisplay.innerText = `${min}:${sec}.${mSec}`
+    }
+
+    // Binary counter for mulitplayer turns
+    const plyrTurn = () => {
+        return gameClrs.length % 2
+    }
+
+    // Prevents extra guesses during game
+    const guessProtect = () => {
+        console.log(this.guesses.length < Math.ceil(gameClrs.length / 2))
+        return this.guesses.length < Math.ceil(gameClrs.length / 2)
+    }
 
     // Assign corresponding classes to elements
     clrBG.classList.add('timed-clr')
@@ -105,6 +178,7 @@ const genTimedLayout = (gameType) => {
     plyrGuess.classList.add('player-guess')
     rndStart.classList.add('round-start-button')
     rndEnd.classList.add('round-end-button')
+    plyrGuessForm.classList.add('guesses')
 
     // Assign any necessary text or styles
     gameCtnr.style.background = 'linear-gradient(60deg, var(--clr-drk-1) 10%, var(--clr-drk-2) 70%, var(--clr-drk-2))'
@@ -116,45 +190,19 @@ const genTimedLayout = (gameType) => {
     rndEnd.innerText = 'Enter Guess'
     // if(gameType === 'pvp') {secDiv.innerText = 30}
     // if(gameType === 'spd') {second.innerText = 0}
-    
 
+    //   :: SECURITY MEASURES ::   //
+    // Prevents early player submission to refresh page
+    plyrGuessForm.addEventListener('submit', (e) => {e.preventDefault()})   
+    
     // Generate initial layout
-    fillBox.append(plyrInfo, rndStart, rndInfo, prmpt, plyrGuess, rndEnd)
+    plyrGuessForm.append(plyrGuess, rndEnd)
+    fillBox.append(plyrInfo, rndStart, rndInfo, prmpt, plyrGuessForm)
     gameCtnr.append(clrBG, fillBox, timeDisplay)
 
     // Start game after Timer clicked
-    rndStart.addEventListener('click', () => {
-        // Display color to guess
-        newClr = newHexCode()
-        clrBG.style.background = `#${newClr}`
-        gameClrs.push(newClr)
-
-        // Start timer ?and remove text?
-        if(gameType = 'pvp') {
-            tick = 30000
-            const countDown = setInterval(() => {
-                // Setup leading zeroes for milliseconds
-                let msZero = 3
-                if(tick % 1000 >= 10) {msZero = 2}
-                if(tick % 1000 >= 100) {msZero = 1}
-
-                // Setup leading zeroes for seconds
-                let secZero = 1
-                if(tick / 1000 < 10) {secZero = 2}
-                
-                // Make variables for updating timer numbers
-                const min = zeroPad(0, 2)
-                const sec = zeroPad(Math.floor(tick / 1000), secZero)
-                const mSec = zeroPad(tick % 1000, msZero)
-                
-                // Mark down tick for timer
-                if(tick > 0) {tick -= 24}
-                
-                // Update Timer
-                timeDisplay.innerText = `${min}:${sec}.${mSec}`
-            }, 24)
-        }
-    })
+    gameStart()
+    // Continue game function -->
 }
 
 const promptMultiplayer = () => {
@@ -224,8 +272,8 @@ const promptMultiplayer = () => {
 const startMulti = () => {
     homeTgl++
     cycleHomeBtns()
-    // promptMultiplayer()
-    genTimedLayout('pvp')
+    promptMultiplayer()
+    // genTimedLayout('pvp')
 }
 
 const startSpeed = () => {
