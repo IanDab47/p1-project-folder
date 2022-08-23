@@ -2,6 +2,13 @@ let homeTgl = 0
 let tick = 0
 const mspf = 33
 
+// !Create array/object to store highscores for Speedrun! //
+const highscores = {
+    name: ['aaa', 'aaa', 'aaa', 'aaa', 'aaa', 'aaa', 'aaa', 'aaa', 'aaa', 'aaa'],
+    guessAcc: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    time: [9999999, 9999999, 9999999, 9999999, 9999999, 9999999, 9999999, 9999999, 9999999, 9999999]
+}
+
 const pvpBtn = document.querySelector('#pvp')
 const spdBtn = document.querySelector('#spd')
 const advBtn = document.querySelector('#adv')
@@ -19,6 +26,10 @@ class Player {
     constructor () {
         this.name = ''
         this.guesses = []
+        this.guessAcc = []
+        this.totalGuessAcc = 0
+        this.time = 0
+        this.wins = 0
     }
 
     giveName(name) {
@@ -29,18 +40,26 @@ class Player {
     newGuess(guess) {
         this.guesses.push(guess)
     }
+    calcTotalAcc() {
+        let i = 0
+        while (i < this.guessAcc.length) {
+            this.totalGuessAcc += this.guessAcc[i]
+            i++
+        }
+        this.totalGuessAcc = Math.round(this.totalGuessAcc / 6)
+    }
 }
 const plyrOne = new Player()
 const plyrTwo = new Player()
 
 const cycleHomeBtns = () => {
-    if(homeTgl) {
+    if(homeTgl === 1) {
         pvpBtn.removeEventListener('click', startMulti)
         spdBtn.removeEventListener('click', startSpeed)
         advBtn.removeEventListener('click', startAdvnt)
         pracBtn.removeEventListener('click', startPrac)
     }
-    else {
+    if(homeTgl === 0) {
         pvpBtn.addEventListener('click', startMulti)
         spdBtn.addEventListener('click', startSpeed)
         advBtn.addEventListener('click', startAdvnt)
@@ -58,20 +77,6 @@ const newHexCode = () => {
 }
 
 function zeroPad(num, places) {return String(num).padStart(places, '0')}
-
-const testStringReturn = () => {return 'String'}
-
-// const startCountDown = () => {
-//     // Create variables for timer
-//     let leadZero = 3
-//     let min = zeroPad(0, 2)
-//     let sec = '30'
-//     let mSec = zeroPad(tick, leadZero)
-//     tick++
-    
-    
-//     return `${min}:${sec}.${mSec}`
-// }
 
 const genTimedLayout = (gameType) => {
     // DEBUG CODE //
@@ -97,19 +102,14 @@ const genTimedLayout = (gameType) => {
     const rndEnd = document.createElement('button')
     const plyrGuessForm = document.createElement('form')
 
-    let hi = ''
-
     // --> Return here for game function
     const gameStart = () => {
-        hi += 'hi'
-        console.log(hi)
-        rndStart.addEventListener('click', () => {
-            console.log(hi)
+        rndStart.addEventListener('click', function handler() {
             // Enable player submission
-            plyrGuessForm.removeEventListener('submit', () => {})
+            plyrGuessForm.removeEventListener('submit', handler)
 
             // Make start timer do nothing if clicked again
-            rndStart.removeEventListener('click', () => {})
+            rndStart.removeEventListener('click', handler)
 
             // Display color to guess
             newClr = newHexCode()
@@ -117,37 +117,196 @@ const genTimedLayout = (gameType) => {
             gameClrs.push(newClr)
 
             // PVP GAME FUNCTION //
-            if(gameType = 'pvp') {
+            if(gameType === 'pvp') {
                 // Start countdown timer
                 tick = 30000   // 30 seconds
                 const countDown = setInterval(countDownTimer, mspf)
 
                 // Submission function
-                plyrGuessForm.addEventListener('submit', (e) => {
-                    console.log(hi)
+                plyrGuessForm.addEventListener('submit', function handler(e) {
                     // Finish round
                     e.preventDefault()
                     clearInterval(countDown)
+                    plyrGuessForm.removeEventListener('submit', handler)
 
                     // Add guess to player guesses and clear input
                     if(plyrTurn() == 0 && guessProtect(plyrTwo)) {plyrTwo.newGuess(plyrGuess.value)}
                     else if(guessProtect(plyrOne)) {plyrOne.newGuess(plyrGuess.value)}
                     plyrGuess.value = ''
 
-                    console.log(plyrOne.guesses)
-                    console.log(plyrTwo.guesses)
-                    console.log(gameClrs)
-
                     // Check if game is ongoing or finished
-                    if(gameClrs.length <= rounds * 2) {return}
-                    else {gameEnd()}
+                    if(gameClrs.length < gameRunning) {gameStart()}   // Repeat Round
+                    else {gameEnd('pvp')}   // Continue to finish game -->
+                })
+            }
+            
+            // SPEEDRUN GAME FUNCTION //
+            if(gameType === 'spd') {
+                // Remove timer button
+                fillBox.removeChild(rndStart)
+                
+                // Start stopwatch if game is
+                tick = 0
+                const stopWatch = setInterval(stopWatchTimer, mspf)
+                
+                // Submission function
+                plyrGuessForm.addEventListener('submit', function handler(e) {
+                    e.preventDefault()
+                    
+                    // Add guess to player guesses and clear input
+                    if(guessProtect(plyrOne)) {plyrOne.newGuess(plyrGuess.value)}
+                    plyrGuess.value = ''
+                    
+                    // Check if game is ongoing or finished
+                    if(gameClrs.length < gameRunning) {
+                        // Display new color to guess
+                        newClr = newHexCode()
+                        clrBG.style.background = `#${newClr}`
+                        gameClrs.push(newClr)
+                        
+                        // Repeat round
+                        gameStart()
+                    }
+                    else {
+                        // Stop stopwatch
+                        clearInterval(stopWatch)
+                        plyrOne.time = tick
+                        plyrGuessForm.removeEventListener('submit', handler)
+
+                        gameEnd('spd')
+                        // Continue to finish game -->
+                    }
                 })
             }
         })
     }
 
-    const gameEnd = () => {
-        console.log('We have a winner!')
+    // --> Return to finish game
+    const gameEnd = (gameType) => {
+        // Create index for temporary loops
+        let i = 0
+
+        // Calculate all player scores
+        calcResults(plyrOne)
+        if(gameType === 'pvp') {calcResults(plyrTwo)}
+
+        // Create neccessary elements for winner display
+        const winCtnr = document.createElement('div')
+        const winText = document.createElement('div')
+        const plyrCtnr = document.createElement('div')
+        const plyrOneCtnr = document.createElement('div')
+        const plyrTwoCtnr = document.createElement('div')
+        const restartBtn = document.createElement('button')
+        const homeBtn = document.createElement('button')
+
+        // --> Return here to display guesses and accuracy
+        const displayPlayerCalc = (player) => {
+            let plyrHighscore = ''
+            const plyrName = document.createElement('div')
+            
+            // Assign name values for scores
+            plyrName.innerText = `${player.name}`
+            plyrName.style.fontWeight = '700'
+            
+            // Append player names for multiplayer
+            if(gameType === 'pvp') { 
+                plyrTwoCtnr.append(plyrName)
+                plyrOneCtnr.append(plyrName)
+                
+                // Appends scores to display each player's guesses and accuracy
+                while(i < player.guesses.length) {
+                    // Create element for player information
+                    const plyrResult = document.createElement('div')
+                    
+                    // Edit element with corressponding information and class
+                    plyrResult.innerText = `${player.guesses[i]} = ${player.guessAcc[i]}%`
+                    plyrGuess.classList.add('player-result-text')
+                    
+                    // Append for correct gamemode
+                    if(player === plyrTwo) {plyrTwoCtnr.append(plyrResult)}
+                    else {plyrOneCtnr.append(plyrResult)}
+                    // Increment loop
+                    i++
+                }
+                // Reset index for future calls
+                i = 0
+            }
+            // Generate total Accuracy for player object(s)
+            if(player === plyrTwo) {plyrTwo.calcTotalAcc()}
+            else {plyrOne.calcTotalAcc()}
+
+            // Generates display for player score and all highscores
+            if(gameType === 'spd') {
+                const endCheck = highscores.name.length
+
+                // Create and display elements for all highscores 
+                for(i = 0; i < highscores.name.length; i++) {
+                    console.log('loop is running')
+                    if(player.totalGuessAcc > highscores.guessAcc[i]) {
+                        console.log('accuracy check is working')
+                        if(player.time < highscores.time[i]) {
+                            console.log('time is lower')
+                            newHighscore(i)
+                            i = endCheck
+                        }
+                        if(player.time >= highscores.time[i]) {
+                            console.log('time is higher')
+                            newHighscore(i + 1)
+                            i = endCheck
+                        }
+                    }
+                }
+                
+                highscores.time.forEach((time, index) => {
+                    const highscoreScore = document.createElement('div')
+
+                    // Generate text for highscores
+                    highscoreScore.innerText = `${index + 1}. ${highscores.name[index]} Time: ${zeroPad(Math.floor(time / 100000),2)}:${zeroPad(Math.floor(time / 1000 % 100),2)}.${zeroPad(time % 1000, 3)} Score: ${highscores.guessAcc[index]}%`
+
+                    plyrOneCtnr.append(highscoreScore)
+                })
+                plyrOneCtnr.style.gap = '20px'
+            }
+        }
+
+        // Assign classes to corresponding elements
+        winCtnr.classList.add('end-display-container')
+        winText.classList.add('end-display-text')
+        plyrCtnr.classList.add('player-display-container')
+        plyrOneCtnr.classList.add('player-one-info')
+        plyrTwoCtnr.classList.add('player-two-info')
+        restartBtn.classList.add('restart-button')
+        homeBtn.classList.add('home-button')
+        
+        // Add elements to display guesses and accuracy
+        displayPlayerCalc(plyrOne)
+        if(gameType === 'pvp') {displayPlayerCalc(plyrTwo)}
+        // Continue to display guesses and accuracy -->
+
+        // Display winner and player guesses
+        if(gameType === 'pvp') {
+            if(plyrOne.totalGuessAcc > plyrTwo.totalGuessAcc) {
+                winText.innerText = `${plyrOne.name} is the winner!`
+            }
+            else if(plyrOne.totalGuessAcc < plyrTwo.totalGuessAcc) {
+                winText.innerText = `${plyrTwo.name} is the winner!`
+            }
+            else {
+                winText.innerText = `It's a draw!`
+            }
+            
+            winCtnr.append(winText)
+            plyrCtnr.append(plyrOneCtnr, plyrTwoCtnr)
+        }
+        if(gameType === 'spd') {
+            winText.innerText = 'HIGHSCORES'
+
+            winCtnr.append(winText)
+            plyrCtnr.append(plyrOneCtnr)
+        }
+        // Append elements to corresponding containers
+        winCtnr.append(plyrCtnr)
+        gameCtnr.append(winCtnr)
     }
 
     const countDownTimer = () => {
@@ -168,6 +327,27 @@ const genTimedLayout = (gameType) => {
         timeDisplay.innerText = `${min}:${sec}.${mSec}`
     }
 
+    const stopWatchTimer = () => {
+        // Setup leading zeroes for timer
+        const msZero = 3
+        const secZero = 2
+        const minZero = 2
+        
+        // Check and increment if minute and reset tick to prevent overflow
+        // if(Math.floor(tick / 1000) === 60) {min++; tick = 0}
+
+        // Make variables for updating stopwatch numbers
+        const minSW = zeroPad(Math.floor(tick / 100000), minZero)
+        const secSW = zeroPad(Math.floor(tick / 1000 % 100), secZero)
+        const mSecSW = zeroPad(tick % 1000, msZero)
+
+        // Mark up tick for stopwatch
+        tick += mspf
+        
+        // Update stopwatch
+        timeDisplay.innerText = `${minSW}:${secSW}.${mSecSW}`
+    }
+
     // Binary counter for mulitplayer turns
     const plyrTurn = () => {
         return gameClrs.length % 2
@@ -175,7 +355,77 @@ const genTimedLayout = (gameType) => {
 
     // Prevents extra guesses during game
     const guessProtect = (player) => {
-        return player.guesses.length < Math.ceil(gameClrs.length / 2)
+        return gameType === 'pvp' ? player.guesses.length < Math.ceil(gameClrs.length / 2) : player.guesses.length < gameClrs.length
+    }
+
+    const calcResults = (player) => {
+        player.guesses.forEach((item, index) => {
+            // Spread characters into arrays for comparison
+            let plyrArr = []
+            let gameArr = []
+
+            if(gameType === 'pvp' && player === plyrTwo) {
+                plyrArr = [...item]
+                gameArr = [...gameClrs[index * 2 + 1]]
+            }
+            else if(gameType === 'pvp') {
+                plyrArr = [...item]
+                gameArr = [...gameClrs[index * 2]]
+            }
+            else {
+                plyrArr = [...item]
+                gameArr = [...gameClrs[index]]
+            }
+            
+            // Declare loop variables
+            const hexLength = 6
+            let i = 0
+            let accuracy = 100
+            const maxMultiplier = 2.0
+            const minMultiplier = 0.2
+
+            // Iterate through both strings
+            while(i < hexLength) {
+                const arrPos = gameArr.length % 2
+                // Remove character 1 by 1 from each array and 
+                const plyrChar = parseInt(plyrArr.shift(), 16)
+                const gameChar = parseInt(gameArr.shift(), 16)
+
+                // Calculate accuracy based on hex position
+                if(plyrChar !== gameChar && arrPos === 0) {
+                    accuracy -= Math.round(Math.abs(plyrChar - gameChar) * maxMultiplier)
+                }
+                else if(plyrChar !== gameChar) {
+                    accuracy -= Math.round(Math.abs(plyrChar - gameChar) * minMultiplier)
+                }
+
+                // Increment up based on gamemode
+                i++
+            }
+            player.guessAcc.push(accuracy)
+        })
+        player.calcTotalAcc()
+    }
+
+    // Inserts new player score into highscore object arrays
+    const newHighscore = (index) => {
+        let temp = []
+        let arrInsertPos = (highscores.name.length - 1) - index
+        
+        while(arrInsertPos > 0) {
+            arrInsertPos--
+
+            temp = [highscores.name[index + arrInsertPos], highscores.guessAcc[index + arrInsertPos], highscores.time[index + arrInsertPos]]
+            highscores.name[index + arrInsertPos + 1] = temp[0]
+            highscores.guessAcc[index + arrInsertPos + 1] = temp[1]
+            highscores.time[index + arrInsertPos + 1] = temp[2]
+        }
+        
+        highscores.name[index] = plyrOne.name
+        highscores.guessAcc[index] = plyrOne.totalGuessAcc
+        highscores.time[index] = plyrOne.time
+
+        console.log(highscores)
     }
 
     // Assign corresponding classes to elements
@@ -193,23 +443,24 @@ const genTimedLayout = (gameType) => {
     // Assign any necessary text or styles
     gameCtnr.style.background = 'linear-gradient(60deg, var(--clr-drk-1) 10%, var(--clr-drk-2) 70%, var(--clr-drk-2))'
     if(gameType === 'pvp') {timeDisplay.innerText = '00:30.000'}
-    plyrInfo.innerText = `${plyrOne.name}! Please start your timer to begin`
+    if(gameType === 'spd') {timeDisplay.innerText = '00:00.000'}
+    if(gameType !== 'prac') {plyrInfo.innerText = `${plyrOne.name}! Please start your timer to begin`}
     prmpt.innerText = 'Guess the color that appears to the right of the screen.'
     rndStart.innerText = 'Start Timer'
     plyrGuess.placeholder = '#00FFCC'
     rndEnd.innerText = 'Enter Guess'
-
+    
     //   :: SECURITY MEASURES ::   //
     // Prevents early player submission to refresh page
-    plyrGuessForm.addEventListener('submit', (e) => {e.preventDefault()})   
+    let min = 0
+    plyrGuessForm.addEventListener('submit', function handler(e) {e.preventDefault()})  
     
     // Generate initial layout
     plyrGuessForm.append(plyrGuess, rndEnd)
     fillBox.append(plyrInfo, rndStart, rndInfo, prmpt, plyrGuessForm)
     gameCtnr.append(clrBG, fillBox, timeDisplay)
-
+    
     // Start game after Timer clicked
-    console.log('ran again')
     gameStart()
     // Continue game function -->
 }
@@ -242,12 +493,12 @@ const promptMultiplayer = () => {
     menuNameTwo.appendChild(inputNameTwo)
 
     // --> Return here to finish Player 1 processing
-    nameFormOne.addEventListener('submit', (e) => {
+    nameFormOne.addEventListener('submit', function handler(e) {
         e.preventDefault()
 
         // Submit player 1 name and switch to player 2 menu
         plyrOne.giveName(inputNameOne.value)
-        nameFormOne.removeEventListener('submit', (e) => {e.preventDefault()})
+        nameFormOne.removeEventListener('submit', handler)
         menuNameOne.remove(inputNameOne)
         nameFormOne.remove(menuNameOne)
         gameCtnr.append(nameFormTwo)
@@ -255,18 +506,16 @@ const promptMultiplayer = () => {
         inputNameTwo.focus()
         
         // Repeat menu processing for Player 2
-        nameFormTwo.addEventListener('submit', (e) => {
+        nameFormTwo.addEventListener('submit', function handler(e) {
             e.preventDefault()
             
             // Submit player 2 name and switch to Game
             plyrTwo.giveName(inputNameTwo.value)
-            nameFormTwo.removeEventListener('submit', (e) => {e.preventDefault()})
+            nameFormTwo.removeEventListener('submit', handler)
             menuNameTwo.remove(inputNameTwo)
             nameFormTwo.remove(menuNameTwo)
-            // gameCtnr.remove(nameFormTwo)
             
             // Generates Timed Layout
-            // genTimedLayout('Multiplayer')
             genTimedLayout('pvp')
         })
     })
@@ -278,29 +527,73 @@ const promptMultiplayer = () => {
     // Continue Player 1 processing -->
 }
 
+const promptSinglePlayer = (gameType) => {
+    // Brings Game Screen Forward
+    gameCtnr.style.zIndex = 10
+
+    // Create Singleplayer Prompt
+    const menuNameOne = document.createElement('div')
+    const inputNameOne = document.createElement('input')
+    const nameFormOne = document.createElement('form')
+
+    // Add CSS styling to major elements
+    gameCtnr.style.backgroundColor = 'rgb(0 0 0 / .5)'
+    menuNameOne.classList.add('menu-name')
+
+    // Give menus text
+    menuNameOne.innerText = 'Enter your Player Name:'
+    inputNameOne.type = 'text'
+
+    // Add input values to Player menus
+    menuNameOne.appendChild(inputNameOne)
+
+    // --> Return here to finish Player 1 processing
+    nameFormOne.addEventListener('submit', function handler(e) {
+        e.preventDefault()
+
+        // Submit player 1 name and switch to player 2 menu
+        plyrOne.giveName(inputNameOne.value)
+        nameFormOne.removeEventListener('submit', handler)
+        menuNameOne.remove(inputNameOne)
+        nameFormOne.remove(menuNameOne)
+        
+        // Generates Timed Layout
+        if(gameType === 'spd') {genTimedLayout('spd')}
+        // if(gameType === 'pve') {genAdventureLayout()}
+    })
+    
+    // Display first menu
+    gameCtnr.append(nameFormOne)
+    nameFormOne.append(menuNameOne)
+    inputNameOne.focus()
+    // Continue Player 1 processing -->
+
+}
+
 const startMulti = () => {
     homeTgl++
     cycleHomeBtns()
-    // promptMultiplayer()
-    genTimedLayout('pvp')
+    promptMultiplayer()
+    // genTimedLayout('pvp')
 }
 
 const startSpeed = () => {
     homeTgl++
     cycleHomeBtns()
-    console.log('speedrun has started')    
+    promptSinglePlayer('spd')
+    // genTimedLayout('spd')
 }
 
 const startAdvnt = () => {
     homeTgl++
     cycleHomeBtns()
-    console.log('adventure has started')    
+    promptSinglePlayer('spd')
 }
 
 const startPrac = () => {
     homeTgl++
     cycleHomeBtns()
-    console.log('practice has started')    
+    genTimedLayout('prac') 
 }
 
 document.addEventListener('DOMContentLoaded', () => {
