@@ -75,6 +75,12 @@ main h1{
     color: var(--clr-drk-2);
 }
 
+canvas {
+    background-color: #432;
+    width: 100%;
+    height: 100%;
+}
+
 footer {
     position: relative;
     height: 5.89vh;
@@ -257,9 +263,8 @@ footer {
     font-size: 1.8em; font-weight: 400;
     /* position: absolute; */
     display: flex;
-    flex-direction: row;
-    justify-content: center; align-content: center;
-    text-align: center;
+    flex-wrap: wrap;
+    align-content: start;
     padding-top: -1em;
     width: 55%; height: 70%;
     border: 5px solid var(--clr-drk-2);
@@ -271,26 +276,94 @@ footer {
 .player-one-info {
     /* display: inline; */
     position: relative;
-    top: 15vh;
+    top: 13vh;
     display: flex;
     flex-direction: column;
-    gap: 33px;
+    gap: 25px;
 }
 
 .player-two-info {
     position: relative;
-    top: 15vh;
+    top: 13vh;
     display: flex;
     flex-direction: column;
-    gap: 33px;
+    gap: 25px;
 }
 
-.restart-button {
+.highscore-list {
+    font-family: 'press start 2p', monospace;
+    font-size: 1.3rem;
+    line-height: 30px;
 
+    transform: scale(.95,1.1);
 }
 
-.home-button {
+.adventure-container {
+    position: absolute;
+    top: 22vh;
+    width: 90%; height: 70%;
+    box-shadow: 0 0 2em -1.5em rgb(0 0 0 / .3)
+}
 
+.adventure-info-container {
+    position: absolute;
+    top: -20vh;
+    display: flex;
+    flex-direction: column; flex-wrap: wrap;
+    align-items: space-evenly;
+    gap: 1%;
+    width: 90%; height: 20%;
+    box-shadow: 0 0 2em -1.5em rgb(0 0 0 / .3)
+}
+
+.adventure-button-container {
+    position: relative;
+    display: flex;
+    flex-direction: row-reverse; flex-wrap: wrap;
+    gap: 1.23em;
+    top: 5vh;
+    width: 25%;
+    
+}
+
+.adventure-tutorial {
+    position: relative;
+    /* top: -20vh; */
+    font-family: silkscreen, monospace;
+    font-size: 1.13em; font-weight: bold;
+    line-height: 1.8em;
+    background: rgb(170 170 220 / .2);
+    border-radius: 0 0.8em 0.8em 0;
+    padding: 5px 1em;
+}
+
+.adventure-start-button {
+    width: 100%; height: 100%;
+    font-family: silkscreen, monospace;
+    font-size: 1.4em; font-weight: bold;
+    border: none; border-radius: .5rem;
+    background: rgb(170 170 220 / .6);
+    box-shadow:0 0 .8em rgb(0 0 0 / .3)
+}
+
+.adventure-start-button:hover {
+    background: rgb(170 170 220 / .8);
+    box-shadow:0 0 .8em rgb(0 0 0 / .4);
+    cursor: pointer;
+}
+
+.return-button {
+    display: inline-block;
+    width: 40%; height: 50%;
+    font-family: silkscreen, monospace;
+    border: none; border-radius: .5rem;
+    background: rgb(170 170 220 / .4);
+    box-shadow:0 0 .8em rgb(0 0 0 / .2)
+}
+
+.return-button:hover {
+    background: rgb(170 170 220 / .55);
+    box-shadow:0 0 .8em rgb(0 0 0 / .3)
 }
 
 #title-pick,

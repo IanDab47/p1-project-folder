@@ -4,9 +4,9 @@ const mspf = 33
 
 // !Create array/object to store highscores for Speedrun! //
 const highscores = {
-    name: ['aaa', 'aaa', 'aaa', 'aaa', 'aaa', 'aaa', 'aaa', 'aaa', 'aaa', 'aaa'],
-    guessAcc: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    time: [9999999, 9999999, 9999999, 9999999, 9999999, 9999999, 9999999, 9999999, 9999999, 9999999]
+    name: ['bob', 'patricia', 'aglet', 'Pi', 'scarlet', 'Vinny', 'SAM', 'stuart', 'illbert', 'squid'],
+    guessAcc: [90, 85, 83, 82, 79, 75, 72, 68, 63, 58],
+    time: [130985, 306845, 267535, 69854, 236581, 99045, 23486, 89845, 53453, 49494]
 }
 
 const pvpBtn = document.querySelector('#pvp')
@@ -80,7 +80,7 @@ function zeroPad(num, places) {return String(num).padStart(places, '0')}
 
 const genTimedLayout = (gameType) => {
     // DEBUG CODE //
-    gameCtnr.style.zIndex = 10
+    // gameCtnr.style.zIndex = 10
 
     // Create array for color storage
     let gameClrs = []
@@ -198,7 +198,16 @@ const genTimedLayout = (gameType) => {
         const plyrTwoCtnr = document.createElement('div')
         const restartBtn = document.createElement('button')
         const homeBtn = document.createElement('button')
-
+        
+        // Assign classes to corresponding elements
+        winCtnr.classList.add('end-display-container')
+        winText.classList.add('end-display-text')
+        plyrCtnr.classList.add('player-display-container')
+        plyrOneCtnr.classList.add('player-one-info')
+        plyrTwoCtnr.classList.add('player-two-info')
+        restartBtn.classList.add('restart-button')
+        homeBtn.classList.add('home-button')
+        
         // --> Return here to display guesses and accuracy
         const displayPlayerCalc = (player) => {
             let plyrHighscore = ''
@@ -208,10 +217,14 @@ const genTimedLayout = (gameType) => {
             plyrName.innerText = `${player.name}`
             plyrName.style.fontWeight = '700'
             
+            // Generate total Accuracy for player object(s)
+            if(player === plyrTwo) {plyrTwo.calcTotalAcc()}
+            else {plyrOne.calcTotalAcc()}
+
             // Append player names for multiplayer
             if(gameType === 'pvp') { 
-                plyrTwoCtnr.append(plyrName)
-                plyrOneCtnr.append(plyrName)
+                if(player === plyrTwo) {plyrTwoCtnr.append(plyrName)}
+                else {plyrOneCtnr.append(plyrName)}
                 
                 // Appends scores to display each player's guesses and accuracy
                 while(i < player.guesses.length) {
@@ -220,8 +233,7 @@ const genTimedLayout = (gameType) => {
                     
                     // Edit element with corressponding information and class
                     plyrResult.innerText = `${player.guesses[i]} = ${player.guessAcc[i]}%`
-                    plyrGuess.classList.add('player-result-text')
-                    
+
                     // Append for correct gamemode
                     if(player === plyrTwo) {plyrTwoCtnr.append(plyrResult)}
                     else {plyrOneCtnr.append(plyrResult)}
@@ -230,10 +242,15 @@ const genTimedLayout = (gameType) => {
                 }
                 // Reset index for future calls
                 i = 0
+
+                // Create text for total guess accuracy average
+                const plyrResult = document.createElement('div')
+                plyrResult.innerText = `Total: ${player.totalGuessAcc[i]}%`
+
+                // Display average accuracy
+                if(player === plyrTwo) {plyrTwoCtnr.append(plyrResult)}
+                else {plyrOneCtnr.append(plyrResult)}
             }
-            // Generate total Accuracy for player object(s)
-            if(player === plyrTwo) {plyrTwo.calcTotalAcc()}
-            else {plyrOne.calcTotalAcc()}
 
             // Generates display for player score and all highscores
             if(gameType === 'spd') {
@@ -241,11 +258,8 @@ const genTimedLayout = (gameType) => {
 
                 // Create and display elements for all highscores 
                 for(i = 0; i < highscores.name.length; i++) {
-                    console.log('loop is running')
                     if(player.totalGuessAcc > highscores.guessAcc[i]) {
-                        console.log('accuracy check is working')
                         if(player.time < highscores.time[i]) {
-                            console.log('time is lower')
                             newHighscore(i)
                             i = endCheck
                         }
@@ -259,24 +273,16 @@ const genTimedLayout = (gameType) => {
                 
                 highscores.time.forEach((time, index) => {
                     const highscoreScore = document.createElement('div')
+                    highscoreScore.classList.add('highscore-list')
 
                     // Generate text for highscores
-                    highscoreScore.innerText = `${index + 1}. ${highscores.name[index]} Time: ${zeroPad(Math.floor(time / 100000),2)}:${zeroPad(Math.floor(time / 1000 % 100),2)}.${zeroPad(time % 1000, 3)} Score: ${highscores.guessAcc[index]}%`
+                    highscoreScore.innerText = `${index + 1}.${highscores.name[index]} Time:${zeroPad(Math.floor(time / 100000),2)}:${zeroPad(Math.floor(time / 1000 % 100),2)}.${zeroPad(time % 1000, 3)} Score:${highscores.guessAcc[index]}%`
 
                     plyrOneCtnr.append(highscoreScore)
                 })
                 plyrOneCtnr.style.gap = '20px'
             }
         }
-
-        // Assign classes to corresponding elements
-        winCtnr.classList.add('end-display-container')
-        winText.classList.add('end-display-text')
-        plyrCtnr.classList.add('player-display-container')
-        plyrOneCtnr.classList.add('player-one-info')
-        plyrTwoCtnr.classList.add('player-two-info')
-        restartBtn.classList.add('restart-button')
-        homeBtn.classList.add('home-button')
         
         // Add elements to display guesses and accuracy
         displayPlayerCalc(plyrOne)
@@ -424,8 +430,6 @@ const genTimedLayout = (gameType) => {
         highscores.name[index] = plyrOne.name
         highscores.guessAcc[index] = plyrOne.totalGuessAcc
         highscores.time[index] = plyrOne.time
-
-        console.log(highscores)
     }
 
     // Assign corresponding classes to elements
@@ -463,6 +467,72 @@ const genTimedLayout = (gameType) => {
     // Start game after Timer clicked
     gameStart()
     // Continue game function -->
+}
+
+const genAdventureLayout = () => {
+    let gameClrs = []
+    const rounds = 5
+    
+    class Adventurer extends Player {
+        super() {
+            this.x
+            this.y = 
+            this.height
+            this.width
+            this.color = '#0f0'
+        }
+    }
+
+    // Create elements for adventure mode
+    const advCtnr = document.createElement('div')
+    const infoCtnr = document.createElement('div')
+    const btnCtnr = document.createElement('div')
+    const tutorial = document.createElement('div')
+    const startBtn = document.createElement('button')
+    const homeBtn = document.createElement('button')
+    const retryBtn = document.createElement('button')
+    const canvas = document.createElement('canvas')
+
+    // Give 2D functionality and proper resolution
+    const ctx = canvas.getContext('2d')
+    canvas.setAttribute('height', getComputedStyle(canvas).height)
+    canvas.setAttribute('width', getComputedStyle(canvas).width)
+
+
+    // --> Return here to start game
+    startBtn.addEventListener('click', function handler() {
+        // Remove start button
+        startBtn.removeEventListener('click', handler)
+        btnCtnr.removeChild(startBtn)
+
+        
+    })
+
+    // Add any neccessary styling
+    advCtnr.classList.add('adventure-container')
+    infoCtnr.classList.add('adventure-info-container')
+    btnCtnr.classList.add('adventure-button-container')
+    tutorial.classList.add('adventure-tutorial')
+    startBtn.classList.add('adventure-start-button')
+    homeBtn.classList.add('return-button', 'adventure-pos')
+    retryBtn.classList.add('return-button', 'adventure-pos')
+
+    tutorial.innerText = 'To play the game, you must eliminate all enemies without dying.\nAn enemy is any block that is the color value of the one displayed below the screen.\nIf an enemy hits you, makes it past you, or you hit the wrong enemy, you lose a life.\nIf you lose all 3 lives, you will die and the game is over.\nPress the start button whenever you are ready to begin!'
+    startBtn.innerText = 'Start Adventure!'
+    homeBtn.innerText = 'Home'
+    retryBtn.innerText = 'Retry'
+
+    gameCtnr.style.background = 'linear-gradient(60deg, var(--clr-drk-1) 10%, var(--clr-drk-2) 70%, var(--clr-drk-2))'
+
+    // Display all elements
+    btnCtnr.append(startBtn, homeBtn, retryBtn)
+    infoCtnr.append(tutorial, btnCtnr)
+    advCtnr.append(infoCtnr, canvas)
+    gameCtnr.append(advCtnr)
+
+    // Run game
+    gameStart()
+    // Continue to start game -->
 }
 
 const promptMultiplayer = () => {
@@ -559,7 +629,7 @@ const promptSinglePlayer = (gameType) => {
         
         // Generates Timed Layout
         if(gameType === 'spd') {genTimedLayout('spd')}
-        // if(gameType === 'pve') {genAdventureLayout()}
+        if(gameType === 'pve') {genAdventureLayout()}
     })
     
     // Display first menu
@@ -587,7 +657,7 @@ const startSpeed = () => {
 const startAdvnt = () => {
     homeTgl++
     cycleHomeBtns()
-    promptSinglePlayer('spd')
+    promptSinglePlayer('pve')
 }
 
 const startPrac = () => {
