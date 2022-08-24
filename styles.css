@@ -370,6 +370,49 @@ footer {
     box-shadow: inset 0 0 .8em rgb(0 0 0 / .3);
 }
 
+.round-display {
+    display: flex;
+    justify-content: center; align-items: center;
+    font-family: 'silkscreen', monospace;
+    font-size: 1.8em;
+    color: white;
+    margin-top: 100px;
+    z-index: 15;
+}
+
+.end-adventure-container {
+    /* z-index: 20; */
+    position: absolute;
+    width: 100vmax; height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; align-items: center;
+    background: rgb(0 0 0 / .5)
+}
+
+.end-adventure-text {
+    position: relative;
+    top: 10vh;
+    font-family: lato, sans-serif;
+    font-size: 3.3rem; font-weight: 900;
+    color: black;
+}
+
+.player-adventure-container {
+    font-family: lato, sans-serif;
+    font-size: 1.8em; font-weight: 400;
+    /* position: absolute; */
+    display: flex;
+    flex-wrap: wrap;
+    align-content: start;
+    padding-top: -1em;
+    width: 35%; height: 40%;
+    border: 5px solid var(--clr-drk-2);
+    border-radius: 4vh;
+    box-shadow: inset 0 0 .5em .2em var(--shdw-lig-act);
+    background: radial-gradient(var(--clr-lig-act) 80%, var(--shdw-lig-act));
+}
+
 .return-button {
     display: inline-block;
     width: 40%; height: 2.0em;
