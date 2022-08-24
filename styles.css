@@ -76,9 +76,10 @@ main h1{
 }
 
 canvas {
+    position: absolute;
+    width: 100%; height: 100%;
     background-color: #432;
-    width: 100%;
-    height: 100%;
+    box-shadow: inset 0 0 1em rgb(0 0 0 / .1);
 }
 
 footer {
@@ -302,26 +303,30 @@ footer {
     position: absolute;
     top: 22vh;
     width: 90%; height: 70%;
-    box-shadow: 0 0 2em -1.5em rgb(0 0 0 / .3)
+    box-shadow: 0 0 2em -1.5em rgb(0 0 0 / .3);
 }
 
 .adventure-info-container {
     position: absolute;
     top: -20vh;
     display: flex;
-    flex-direction: column; flex-wrap: wrap;
+    flex-direction: column-reverse; flex-wrap: wrap;
     align-items: space-evenly;
+    object-fit: cover;
+    overflow: hidden;
     gap: 1%;
-    width: 90%; height: 20%;
-    box-shadow: 0 0 2em -1.5em rgb(0 0 0 / .3)
+    width: 100%; height: 28%;
+    box-shadow: 0 0 2em -1.5em rgb(0 0 0 / .3);
 }
 
+
 .adventure-button-container {
-    position: relative;
+    /* position: relative; */
     display: flex;
-    flex-direction: row-reverse; flex-wrap: wrap;
+    flex-direction: row; flex-wrap: wrap;
+    align-content: end;
     gap: 1.23em;
-    top: 5vh;
+    top: -8vh;
     width: 25%;
     
 }
@@ -329,9 +334,10 @@ footer {
 .adventure-tutorial {
     position: relative;
     /* top: -20vh; */
+    width: 70%;
     font-family: silkscreen, monospace;
-    font-size: 1.13em; font-weight: bold;
-    line-height: 1.8em;
+    font-size: 1.4em; font-weight: bold; letter-spacing: -.08em;
+    line-height: 1.35em;
     background: rgb(170 170 220 / .2);
     border-radius: 0 0.8em 0.8em 0;
     padding: 5px 1em;
@@ -343,7 +349,9 @@ footer {
     font-size: 1.4em; font-weight: bold;
     border: none; border-radius: .5rem;
     background: rgb(170 170 220 / .6);
-    box-shadow:0 0 .8em rgb(0 0 0 / .3)
+    box-shadow:0 0 .8em rgb(0 0 0 / .3);
+
+    transition: background 200ms ease-in;
 }
 
 .adventure-start-button:hover {
@@ -352,13 +360,24 @@ footer {
     cursor: pointer;
 }
 
+.adventure-start-clicked {
+    width: 100%; height: 100%;
+    font-family: silkscreen, monospace;
+    font-size: 1.4em; font-weight: bold;
+    border: none; border-radius: .5rem;
+    background: rgb(30 30 40 / .5);
+    box-shadow: inset 0 0 .8em rgb(0 0 0 / .3);
+}
+
 .return-button {
     display: inline-block;
-    width: 40%; height: 50%;
+    width: 40%; height: 2.0em;
     font-family: silkscreen, monospace;
+    font-size: 1.2em;
     border: none; border-radius: .5rem;
     background: rgb(170 170 220 / .4);
-    box-shadow:0 0 .8em rgb(0 0 0 / .2)
+    box-shadow:0 0 .8em rgb(0 0 0 / .2);
+    cursor: pointer;
 }
 
 .return-button:hover {

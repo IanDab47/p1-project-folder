@@ -470,19 +470,10 @@ const genTimedLayout = (gameType) => {
 }
 
 const genAdventureLayout = () => {
-    let gameClrs = []
+    let gameRunning = true
+    const gameClrs = ['#0f8340', '#a83b3b', '#8f1390', '#186bcb', '#3cd5f3']
     const rounds = 5
     
-    class Adventurer extends Player {
-        super() {
-            this.x
-            this.y = 
-            this.height
-            this.width
-            this.color = '#0f0'
-        }
-    }
-
     // Create elements for adventure mode
     const advCtnr = document.createElement('div')
     const infoCtnr = document.createElement('div')
@@ -492,22 +483,18 @@ const genAdventureLayout = () => {
     const homeBtn = document.createElement('button')
     const retryBtn = document.createElement('button')
     const canvas = document.createElement('canvas')
-
+    
+    // Display all elements
+    btnCtnr.append(startBtn, homeBtn, retryBtn)
+    infoCtnr.append(tutorial, btnCtnr)
+    advCtnr.append(infoCtnr, canvas)
+    gameCtnr.append(advCtnr)
+    
     // Give 2D functionality and proper resolution
     const ctx = canvas.getContext('2d')
     canvas.setAttribute('height', getComputedStyle(canvas).height)
     canvas.setAttribute('width', getComputedStyle(canvas).width)
-
-
-    // --> Return here to start game
-    startBtn.addEventListener('click', function handler() {
-        // Remove start button
-        startBtn.removeEventListener('click', handler)
-        btnCtnr.removeChild(startBtn)
-
-        
-    })
-
+    
     // Add any neccessary styling
     advCtnr.classList.add('adventure-container')
     infoCtnr.classList.add('adventure-info-container')
@@ -523,16 +510,79 @@ const genAdventureLayout = () => {
     retryBtn.innerText = 'Retry'
 
     gameCtnr.style.background = 'linear-gradient(60deg, var(--clr-drk-1) 10%, var(--clr-drk-2) 70%, var(--clr-drk-2))'
+    
+    const randX = () => (Math.round((Math.random() - .5) * (canvas.width * 0.95)) + (canvas.width / 2))
+    const randSize = () => (Math.pow(Math.floor(Math.random() * 10), Math.round(Math.random() * 1.5)) + 40)
 
-    // Display all elements
-    btnCtnr.append(startBtn, homeBtn, retryBtn)
-    infoCtnr.append(tutorial, btnCtnr)
-    advCtnr.append(infoCtnr, canvas)
-    gameCtnr.append(advCtnr)
+    class Adventurer {
+        constructor(x, y, height, width, clrFill, clrStroke) {
+            this.x = x
+            this.y = y
+            this.height = height
+            this.width = width
+            this.clrFill = clrFill
+            this.clrStroke = clrStroke
+        }
 
-    // Run game
+        render(xPos) {
+            ctx.fillStyle = this.clrFill
+            ctx.strokeStyle = this.clrStroke
+            ctx.lineWidth = 5
+            ctx.fillRect(xPos, this.y, this.width, this.height)
+            ctx.strokeRect(xPos, this.y, this.width, this.height)
+            ctx.fillRect(xPos + 17.5, this.y - 25, this.width - 35, this.height - 10)
+            ctx.strokeRect(xPos + 17.5, this.y - 25, this.width - 35, this.height - 10)
+        }
+    }
+    const plyr = new Adventurer(canvas.width / 2 - 25, 870, 50, 50, '#3d3', '#2a2')
+    const enemy = new Adventurer(randX(), -100, randSize(), randSize(), gameClrs[0])
+    let bullets = []
+    let enemyBullets = []
+
+    // plyr.render(500)
+
+    
+    // Render game
+    const gameLoop = () => {
+        // canvas.setAttribute('height', getComputedStyle(canvas).height)
+        // canvas.setAttribute('width', getComputedStyle(canvas).width)
+        
+        
+        // if(hitDetect(plyr, enemy)) {loseLife()}
+        
+        if(gameRunning) {
+            document.addEventListener('mousemove', function handler(e) {
+                const box = advCtnr.getBoundingClientRect()
+                const xPos = Math.ceil(e.clientX - box.left)
+                ctx.clearRect(0, 840, canvas.width, canvas.height)
+                plyr.render(xPos)
+                document.removeEventListener('mousemove', handler)
+            })
+        }
+    }
+
+    // --> Return here to start game
+    const gameStart = () => {
+        startBtn.addEventListener('click', function handler() {
+            // Remove start button
+            startBtn.removeEventListener('click', handler)
+            startBtn.innerText = 'Adventure Begun!'
+            startBtn.classList.add('adventure-start-clicked')
+            startBtn.classList.remove('adventure-start-button')
+            
+            // Detect player movement through mouse hover
+        })
+    }
+
+    const hitDetect = () => {
+
+    }
+
+
+    // // Run game
+    const gameIs = setInterval(gameLoop, mspf)
     gameStart()
-    // Continue to start game -->
+    // // Continue to start game -->
 }
 
 const promptMultiplayer = () => {
