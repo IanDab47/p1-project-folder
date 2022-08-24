@@ -472,7 +472,8 @@ const genTimedLayout = (gameType) => {
 const genAdventureLayout = () => {
     let gameRunning = true
     const gameClrs = ['#0f8340', '#a83b3b', '#8f1390', '#186bcb', '#3cd5f3']
-    const rounds = 5
+    const MAX_ROUNDS = 5
+    let rounds = 0
     
     // Create elements for adventure mode
     const advCtnr = document.createElement('div')
@@ -520,6 +521,7 @@ const genAdventureLayout = () => {
             this.y = y
             this.height = height
             this.width = width
+            this.speed = 0
             this.clrFill = clrFill
             this.clrStroke = clrStroke
         }
@@ -528,41 +530,53 @@ const genAdventureLayout = () => {
             ctx.fillStyle = this.clrFill
             ctx.strokeStyle = this.clrStroke
             ctx.lineWidth = 5
-            ctx.fillRect(xPos, this.y, this.width, this.height)
-            ctx.strokeRect(xPos, this.y, this.width, this.height)
-            ctx.fillRect(xPos + 17.5, this.y - 25, this.width - 35, this.height - 10)
-            ctx.strokeRect(xPos + 17.5, this.y - 25, this.width - 35, this.height - 10)
+            ctx.fillRect(xPos, this.y += this.speed, this.width, this.height)
+            ctx.strokeRect(xPos, this.y += this.speed, this.width, this.height)
+            if(this === plyr) {
+                ctx.fillRect(xPos + 17.5, this.y - 25, this.width - 35, this.height - 10)
+                ctx.strokeRect(xPos + 17.5, this.y - 25, this.width - 35, this.height - 10)
+            }
+        }
+        
+        fire(vel) {
+            this.speed = vel
+            ctx.fillStyle = this.clrFill
+            ctx.fillRect(this.x, this.y += this.speed, this.width, this.height)
         }
     }
     const plyr = new Adventurer(canvas.width / 2 - 25, 870, 50, 50, '#3d3', '#2a2')
-    const enemy = new Adventurer(randX(), -100, randSize(), randSize(), gameClrs[0])
+    const enemy = new Adventurer(canvas.width / 2, -100, randSize(), randSize(), gameClrs[0])
     let bullets = []
     let enemyBullets = []
 
-    // plyr.render(500)
-
+    const spawnEnemy = () => {
+        
+    }
     
     // Render game
     const gameLoop = () => {
-        // canvas.setAttribute('height', getComputedStyle(canvas).height)
-        // canvas.setAttribute('width', getComputedStyle(canvas).width)
-        
         
         // if(hitDetect(plyr, enemy)) {loseLife()}
         
         if(gameRunning) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            const box = advCtnr.getBoundingClientRect()
+            const xPos = plyr.x
+            plyr.render(xPos)
             document.addEventListener('mousemove', function handler(e) {
-                const box = advCtnr.getBoundingClientRect()
-                const xPos = Math.ceil(e.clientX - box.left)
-                ctx.clearRect(0, 840, canvas.width, canvas.height)
-                plyr.render(xPos)
+                plyr.x = Math.ceil(e.clientX - box.left) + (plyr.width + 25)
                 document.removeEventListener('mousemove', handler)
             })
+            for(let i = 0; i < bullets.length; i++) {
+                bullets[i].fire(-30)
+                if(bullets[i].y < 0) {bullets.shift()}
+            }
         }
     }
 
     // --> Return here to start game
-    const gameStart = () => {
+    const roundStart = () => {
+        rounds++
         startBtn.addEventListener('click', function handler() {
             // Remove start button
             startBtn.removeEventListener('click', handler)
@@ -570,7 +584,11 @@ const genAdventureLayout = () => {
             startBtn.classList.add('adventure-start-clicked')
             startBtn.classList.remove('adventure-start-button')
             
-            // Detect player movement through mouse hover
+            canvas.addEventListener('click', function shoot(e) {
+                const box = advCtnr.getBoundingClientRect()
+                const xPos = Math.ceil(e.clientX - box.left) + (plyr.width + 25)
+                bullets.push(new Adventurer(xPos + plyr.width/2, plyr.y - 25, 10, 4, 'antiquewhite'))
+            })
         })
     }
 
@@ -578,10 +596,9 @@ const genAdventureLayout = () => {
 
     }
 
-
     // // Run game
     const gameIs = setInterval(gameLoop, mspf)
-    gameStart()
+    roundStart()
     // // Continue to start game -->
 }
 

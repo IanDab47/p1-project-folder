@@ -19,6 +19,7 @@
 }
 
 :root {
+    font-size: 16px;
     --clr-red: #f33;
     --clr-grn: #3d3;
     --clr-blu: #33f;
@@ -336,8 +337,8 @@ footer {
     /* top: -20vh; */
     width: 70%;
     font-family: silkscreen, monospace;
-    font-size: 1.4em; font-weight: bold; letter-spacing: -.08em;
-    line-height: 1.35em;
+    font-size: 1.3em; font-weight: bold; letter-spacing: -.08em;
+    line-height: 1.4em;
     background: rgb(170 170 220 / .2);
     border-radius: 0 0.8em 0.8em 0;
     padding: 5px 1em;
