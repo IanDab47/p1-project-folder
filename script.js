@@ -714,6 +714,7 @@ const genAdventureLayout = () => {
             resultCtnr.classList.remove('end-adventure-container')
             resultCtnr.innerText = ''
             enemy = []
+            lives = 3
             startBtn.classList.remove('adventure-start-clicked')
             startBtn.classList.add('adventure-start-button')
             document.removeEventListener('click', clickContinue)
