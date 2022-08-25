@@ -131,6 +131,11 @@ const genTimedLayout = (gameType) => {
     const retryBtn = document.createElement('button')
     const plyrGuessForm = document.createElement('form')
 
+    homeBtn.addEventListener('click', function leaveTimed() {
+        homeBtn.removeEventListener('click', leaveTimed)
+        returnHome()
+    })
+
     // --> Return here for game function
     const gameStart = () => {
         rndStart.addEventListener('click', function handler() {
@@ -170,24 +175,49 @@ const genTimedLayout = (gameType) => {
             }
             
             // SPEEDRUN GAME FUNCTION //
-            if(gameType === 'spd') {
+            if(gameType !== 'pvp') {
                 // Remove timer button
                 fillBox.removeChild(rndStart)
                 
-                // Start stopwatch if game is
-                tick = 0
-                const stopWatch = setInterval(stopWatchTimer, mspf)
-                
-                // Submission function
-                plyrGuessForm.addEventListener('submit', function handler(e) {
-                    e.preventDefault()
+                if(gameType === 'spd') {
+                    // Start stopwatch if game is
+                    tick = 0
+                    const stopWatch = setInterval(stopWatchTimer, mspf)
                     
+                    // Submission function
+                    plyrGuessForm.addEventListener('submit', function handler(e) {
+                        e.preventDefault()
+                        
+                        // Add guess to player guesses and clear input
+                        if(guessProtect(plyrOne)) {plyrOne.newGuess(plyrGuess.value)}
+                        plyrGuess.value = ''
+                        
+                        // Check if game is ongoing or finished
+                        if(gameClrs.length < gameRunning) {
+                            // Display new color to guess
+                            newClr = newHexCode()
+                            clrBG.style.background = `#${newClr}`
+                            gameClrs.push(newClr)
+                            
+                            // Repeat round
+                            gameStart()
+                        }
+                        else {
+                            // Stop stopwatch
+                            clearInterval(stopWatch)
+                            plyrOne.time = tick
+                            plyrGuessForm.removeEventListener('submit', handler)
+    
+                            gameEnd('spd')
+                            // Continue to finish game -->
+                        }
+                    })
+                }
+                if(gameType === 'prac') {
                     // Add guess to player guesses and clear input
                     if(guessProtect(plyrOne)) {plyrOne.newGuess(plyrGuess.value)}
-                    plyrGuess.value = ''
-                    
-                    // Check if game is ongoing or finished
-                    if(gameClrs.length < gameRunning) {
+                        plyrGuess.value = ''
+
                         // Display new color to guess
                         newClr = newHexCode()
                         clrBG.style.background = `#${newClr}`
@@ -195,17 +225,7 @@ const genTimedLayout = (gameType) => {
                         
                         // Repeat round
                         gameStart()
-                    }
-                    else {
-                        // Stop stopwatch
-                        clearInterval(stopWatch)
-                        plyrOne.time = tick
-                        plyrGuessForm.removeEventListener('submit', handler)
-
-                        gameEnd('spd')
-                        // Continue to finish game -->
-                    }
-                })
+                }
             }
         })
     }
@@ -449,7 +469,7 @@ const genTimedLayout = (gameType) => {
         
         while(arrInsertPos > 0) {
             arrInsertPos--
-
+            
             temp = [highscores.name[index + arrInsertPos], highscores.guessAcc[index + arrInsertPos], highscores.time[index + arrInsertPos]]
             highscores.name[index + arrInsertPos + 1] = temp[0]
             highscores.guessAcc[index + arrInsertPos + 1] = temp[1]
@@ -482,20 +502,23 @@ const genTimedLayout = (gameType) => {
     if(gameType === 'spd') {timeDisplay.innerText = '00:00.000'}
     if(gameType !== 'prac') {plyrInfo.innerText = `${plyrOne.name}! Please start your timer to begin`}
     prmpt.innerText = 'Guess the color that appears to the right of the screen.'
-    rndStart.innerText = 'Start Timer'
+    if(gameType === 'spd'){rndStart.innerText = 'Start Timer'}
+    if(gameType === 'prac'){rndStart.innerText = 'Start Practice'}
     plyrGuess.placeholder = '#00FFCC'
     rndEnd.innerText = 'Enter Guess'
+    homeBtn.innerText = 'HOME'
+    retryBtn.innerText = 'Restart'
     
     //   :: SECURITY MEASURES ::   //
     // Prevents early player submission to refresh page
-    let min = 0
+    // let min = 0
     plyrGuessForm.addEventListener('submit', function handler(e) {e.preventDefault()})  
     
     // Generate initial layout
     btnCtnr.append(homeBtn, retryBtn)
     plyrGuessForm.append(plyrGuess, rndEnd)
-    fillBox.append(plyrInfo, rndStart, rndInfo, prmpt, plyrGuessForm)
-    gameCtnr.append(clrBG, fillBox, timeDisplay, btnCtnr)
+    fillBox.append(plyrInfo, rndStart, rndInfo, prmpt, plyrGuessForm, btnCtnr)
+    gameCtnr.append(clrBG, fillBox, timeDisplay)
     
     // Start game after Timer clicked
     gameStart()
@@ -711,13 +734,13 @@ const genAdventureLayout = () => {
         gameCtnr.appendChild(resultCtnr)
         
         document.addEventListener('click', function clickContinue() {
-            console.log('running')
             resultCtnr.classList.remove('end-adventure-container')
             resultCtnr.innerText = ''
             enemy = []
-            lives = 3
+            // lives = 3
             startBtn.classList.remove('adventure-start-clicked')
             startBtn.classList.add('adventure-start-button')
+            roundStart()
             document.removeEventListener('click', clickContinue)
         })
     }

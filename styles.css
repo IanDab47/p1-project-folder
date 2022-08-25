@@ -224,23 +224,54 @@ footer {
 }
 
 .player-guess {
+    /* background-color: white; */
+    font-family: Silkscreen, monospace; 
+    font-weight: 700; font-size: 1.3rem;
+    text-align: center;
+    height: 2em;
+    width: 12em;
+    /* border: 3px solid rgb(170 170 220 / .6);  */
+    border-radius: 8px; 
+    background-color: rgb(170 170 220 / .6);
+    /* cursor: pointer; */
     caret-color: black;
+    box-shadow: inset 0 0 8px 2px rgb(30 30 30 / .1);
+}
+
+.timed-button-container {
+    position: absolute;
+    display: flex;
+    flex-direction: row; flex-wrap: wrap;
+    gap: 1.23em;
+    margin-top: 4vh;
+    width: 30%;
 }
 
 .round-start-button,
 .round-end-button {
+    position: relative;
+    display: inline;
+    height: 2.0em;
+    font-family: silkscreen, monospace;
+    font-size: .8em; font-weight: bold; line-height: 1em;
+    border: none; border-radius: .5rem;
+    background: rgb(170 170 220 / .4);
+    box-shadow:0 0 .8em rgb(0 0 0 / .2);
+    cursor: pointer;
+    padding: 0 .8em;
+    margin-left: 1em;
 
+    transition: background 80ms ease-in,
+                box-shadow 80ms ease-in
+    ;
 }
 
-.round-start-button {
-    /* float: right; */
-    border: none; border-radius: 1em;
-    margin-left: 5%; padding: .5em 2.5em;
-}
-
-.round-end-button {
-    border: none; border-radius: 1em;
-    margin-left: 5%; padding: .5em 2.5em;
+.round-start-button:hover,
+.round-end-button:hover,
+.round-start-button:focus,
+.round-end-button:focus{
+    background: rgb(170 170 220 / .6);
+    box-shadow:0 0 .8em rgb(0 0 0 / .1);
 }
 
 .end-display-container {
@@ -446,6 +477,10 @@ footer {
     background: rgb(170 170 220 / .4);
     box-shadow:0 0 .8em rgb(0 0 0 / .2);
     cursor: pointer;
+
+    transition: background 80ms ease-in,
+                box-shadow 80ms ease-in
+    ;
 }
 
 .return-button:hover {
