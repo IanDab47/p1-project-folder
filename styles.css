@@ -10,6 +10,7 @@
     margin: 0 auto;
     cursor: default;
     outline: transparent;
+    overflow: hidden;
 }
 
 *:hover, 
