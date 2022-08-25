@@ -713,6 +713,9 @@ const genAdventureLayout = () => {
         document.addEventListener('click', function clickContinue() {
             resultCtnr.classList.remove('end-adventure-container')
             resultCtnr.innerText = ''
+            startBtn.classList.add('adventure-start-button')
+            startBtn.classList.remove('adventure-start-clicked')
+            enemy = []
             document.removeEventListener('click', clickContinue)
         })
     }
