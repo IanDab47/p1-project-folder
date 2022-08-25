@@ -711,6 +711,7 @@ const genAdventureLayout = () => {
         gameCtnr.appendChild(resultCtnr)
         
         document.addEventListener('click', function clickContinue() {
+            console.log('running')
             resultCtnr.classList.remove('end-adventure-container')
             resultCtnr.innerText = ''
             enemy = []
