@@ -117,6 +117,7 @@ const genTimedLayout = (gameType) => {
     else if(gameType === 'spd') {gameRunning = rounds}
 
     // Create elements for the timed layout design
+    const btnCtnr = document.createElement('div')
     const clrBG = document.createElement('div')
     const fillBox = document.createElement('div')
     const plyrInfo = document.createElement('div')
@@ -126,6 +127,8 @@ const genTimedLayout = (gameType) => {
     const plyrGuess = document.createElement('input')
     const rndStart = document.createElement('button')
     const rndEnd = document.createElement('button')
+    const homeBtn = document.createElement('button')
+    const retryBtn = document.createElement('button')
     const plyrGuessForm = document.createElement('form')
 
     // --> Return here for game function
@@ -459,6 +462,7 @@ const genTimedLayout = (gameType) => {
     }
 
     // Assign corresponding classes to elements
+    btnCtnr.classList.add('timed-button-container')
     clrBG.classList.add('timed-clr')
     fillBox.classList.add('game-info-box')
     plyrInfo.classList.add('player-info')
@@ -468,6 +472,8 @@ const genTimedLayout = (gameType) => {
     plyrGuess.classList.add('player-guess')
     rndStart.classList.add('round-start-button')
     rndEnd.classList.add('round-end-button')
+    homeBtn.classList.add('return-button', 'timed-pos')
+    retryBtn.classList.add('return-button', 'timed-pos')
     plyrGuessForm.classList.add('guesses')
 
     // Assign any necessary text or styles
@@ -486,9 +492,10 @@ const genTimedLayout = (gameType) => {
     plyrGuessForm.addEventListener('submit', function handler(e) {e.preventDefault()})  
     
     // Generate initial layout
+    btnCtnr.append(homeBtn, retryBtn)
     plyrGuessForm.append(plyrGuess, rndEnd)
     fillBox.append(plyrInfo, rndStart, rndInfo, prmpt, plyrGuessForm)
-    gameCtnr.append(clrBG, fillBox, timeDisplay)
+    gameCtnr.append(clrBG, fillBox, timeDisplay, btnCtnr)
     
     // Start game after Timer clicked
     gameStart()
@@ -516,8 +523,7 @@ const genAdventureLayout = () => {
     let SPAWN_RATE = 1600 / (Math.pow(rounds + 1, BASE_ROUND_MULTIPLIER / 2.4))
     let ENEMIES_PER_ROUND = Math.ceil(BASE_NUMBER_OF_ENEMIES * ((BASE_ROUND_MULTIPLIER * rounds) + 1))
     let rndDisplayTimer = 0
-    let iFrame = null
-    let iFrameTimer = 0
+    let spawnEnemyInterval = null
     
     // Create elements for adventure mode
     const advCtnr = document.createElement('div')
@@ -600,9 +606,8 @@ const genAdventureLayout = () => {
         }
     }
     let plyr = new Adventurer(canvas.width / 2 - 25, 870, 50, 50, '#3d3', '#2a2')
-    let enemy = [new Adventurer(canvas.width / 2, -50, randSize(), randSize(), clrFills[rounds], clrStrokes[rounds])]
+    let enemy = []
     let bullets = []
-    // let enemyBullets = []
     
     const updateFormulas = () => {
         MOVEMENT_SPEED = BASE_SPEED + (((rounds) * BASE_ROUND_MULTIPLIER + 1)*.6)
@@ -617,8 +622,8 @@ const genAdventureLayout = () => {
         size = randSize()
         clr = randClr()
         if(enemy.length < ENEMIES_PER_ROUND) {enemy.push(new Adventurer(xPos, -100, size, size, clrFills[clr - 1], clrStrokes[clr - 1]))}
-        enemy[enemy.length - 1].speed = BASE_SPEED + (((clr) * BASE_ROUND_MULTIPLIER + 1)*.6)
-        console.log(enemy[enemy.length - 1].speed)
+        if(enemy.length > 0) {enemy[enemy.length - 1].speed = BASE_SPEED + (((clr) * BASE_ROUND_MULTIPLIER + 1)*.6)}
+        console.log(enemy.length)
     }
     
     const displayRnds = () => {
@@ -628,37 +633,37 @@ const genAdventureLayout = () => {
     const rndDisplay = setInterval(displayRnds, 100)
     
     const resetGame = () => {
+        if(roundRunning) {
+            startBtn.classList.add('adventure-start-button')
+            startBtn.classList.remove('adventure-start-clicked')
+        }
+
         clearInterval(gameIs)
+        clearInterval(spawnEnemyInterval)
         
-        rounds = -1
+        roundRunning = false
+        lives = 3
+        rounds = 0
         bullets = []
         enemy = []
-        enemyBullets = []
-        spawnEnemy()
         
         gameIs = setInterval(gameLoop, mspf)
         roundStart()
     }
-
-    const shoot = (e) => {
-        if(roundRunning === false) {clearInterval(spawnEnemyInterval)}
-    }
-
+    
     // Shoot bullets
-    canvas.addEventListener('click', shoot)
-        if(roundRunning === false) {clearInterval(spawnEnemyInterval)}
+    const shoot = (e) => {
         const box = advCtnr.getBoundingClientRect()
         const xPos = Math.ceil((e.clientX * 1.1) - box.left) - (plyr.width / 2)
         bullets.push(new Adventurer(xPos + plyr.width/2, plyr.y - 25, 10, 4, 'antiquewhite'))
-        
-        if(enemy.length >= ENEMIES_PER_ROUND) {
-            clearInterval(spawnEnemyInterval)
-            // canvas.removeEventListener('click', shoot) 
-        }
+    }
+    canvas.addEventListener('click', shoot)
+    
     
     // --> Return here to start game
     const roundStart = () => {
         updateFormulas()
+        console.log(enemy)
         if(rounds === 0) {lives = 3}
         // console.log(MOVEMENT_SPEED, SPAWN_RATE, ENEMIES_PER_ROUND)
         
@@ -667,6 +672,12 @@ const genAdventureLayout = () => {
         if(rounds > MAX_ROUNDS) {youWin()}
         else {
             startBtn.addEventListener('click', function startRound() {
+                // Remove start button functionality
+                startBtn.removeEventListener('click', startRound)
+                startBtn.innerText = 'Adventure Begun!'
+                startBtn.classList.add('adventure-start-clicked')
+                startBtn.classList.remove('adventure-start-button')
+
                 roundRunning = true
                 
                 // Display round number to player and clear after 2 seconds
@@ -674,28 +685,16 @@ const genAdventureLayout = () => {
                 rndDisplayTimer = 0
                 
                 // Begin spawning enemies
-                const spawnEnemyInterval = setInterval(spawnEnemy, SPAWN_RATE)
-
-                // Give retry button functionality with spawn
-                retryBtn.addEventListener('click', function stopSpawns() {
-                    clearInterval(spawnEnemyInterval)
-                    ENEMIES_PER_ROUND = enemy.length
-                    retryBtn.removeEventListener('click', stopSpawns)
-                })
-                
-                // Remove start button functionality
-                startBtn.removeEventListener('click', startRound)
-                startBtn.innerText = 'Adventure Begun!'
-                startBtn.classList.add('adventure-start-clicked')
-                startBtn.classList.remove('adventure-start-button')
-                
-                if(rounds === 1) {enemy[0].speed = MOVEMENT_SPEED}
+                spawnEnemyInterval = setInterval(spawnEnemy, SPAWN_RATE)
+                                
             })
         }
     }
     
     const youLose = () => {
         // clearInterval(gameIs)
+        clearInterval(spawnEnemyInterval)
+        roundRunning = false
         rounds = 0
         
         const resultText = document.createElement('div')
@@ -719,9 +718,8 @@ const genAdventureLayout = () => {
     }
     
     const loseLife = () => {
-        if(iFrameTimer === 500) {lives--}
+        lives--
         if(lives === 0) {youLose()}
-        iFrameTimer -= 10
     }
     
     const youWin = () => {
@@ -753,8 +751,11 @@ const genAdventureLayout = () => {
     
     // Render game
     const gameLoop = () => {    
+
         if(lives >= 0) {livesDisplay.innerText = `Lives: ${lives}`}
+
         if(gameRunning) {
+            if(roundRunning === false) {clearInterval(spawnEnemyInterval)}
             ctx.clearRect(0, 0, canvas.width, canvas.height)
             const box = advCtnr.getBoundingClientRect()
             const xPos = plyr.x
@@ -763,18 +764,25 @@ const genAdventureLayout = () => {
                 plyr.x = Math.ceil((e.clientX * 1.1) - box.left) - (plyr.width / 2)
                 document.removeEventListener('mousemove', handler)
             })
+
+            // Bullet game info
             for(let i = 0; i < bullets.length; i++) {
                 if(bullets[i].alive) {bullets[i].fire(-30)}
                 if(bullets[i].y < 0 || !bullets[i].alive) {bullets[i].y = 1600; bullets[i].speed = 0; bullets[i].alive = false}
             }
+
+            
             if(roundRunning) {
+                // Special Info
                 hexDisplay.innerText = `THE ENEMY IS: ${enemyClr}`
                 if(rndDisplayTimer === 2000) {clearInterval(rndDisplay); rndDisplayTimer = 0}
+                if(enemy.length >= ENEMIES_PER_ROUND) {clearInterval(spawnEnemyInterval)}
 
+                // Enemy game info
                 let allDead = true
                 for(let i = 0; i < enemy.length; i++) {
                     if(enemy[i].alive) {enemy[i].render(enemy[i].x)}
-                    if(enemy[i].y > canvas.height && enemy[i].clrFIll === enemyClr) {loseLife()}
+                    if(enemy[i].y > canvas.height && enemy[i].clrFill === enemyClr) {loseLife()}
                     if(!enemy[i].alive || enemy[i].y > canvas.height) {enemy[i].y = -200; enemy[i].speed = 0; enemy[i].alive = false}
                     if(hitDetect(enemy[i], plyr)) {enemy[i].alive = false; loseLife()}
                     if(enemy[i].alive) {allDead = false}
@@ -794,10 +802,12 @@ const genAdventureLayout = () => {
                         }
                     })
                 }
+
+                // Round End Conditions and resets
                 if(allDead && enemy.length >= ENEMIES_PER_ROUND) {
                     roundRunning = false
                     enemy = []
-                    spawnEnemy()
+                    // spawnEnemy()
                     startBtn.classList.add('adventure-start-button')
                     startBtn.classList.remove('adventure-start-clicked')
                     if(rounds < MAX_ROUNDS) {startBtn.innerText = `Begin Round: ${rounds + 1}`}
@@ -816,7 +826,7 @@ const genAdventureLayout = () => {
         const Top = killer.y + killer.height >= victim.y
         const Bot = killer.y <= (victim.y + victim.height)
 
-        if(Left && Right && Top && Bot) {return true}
+        if(Left && Right && Top && Bot && killer.alive && victim.alive) {return true}
         else {return false}
     }
 
@@ -836,6 +846,7 @@ const genAdventureLayout = () => {
     // Run game
     homeBtn.addEventListener('click', returnHomeFromAdv)
     retryBtn.addEventListener('click', resetGame)
+    console.log('retry')
     let gameIs = setInterval(gameLoop, mspf)
     roundStart()
     // Continue to start game -->
