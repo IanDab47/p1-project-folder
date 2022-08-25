@@ -10,7 +10,6 @@
     margin: 0 auto;
     cursor: default;
     outline: transparent;
-    overflow: hidden;
 }
 
 *:hover, 
@@ -63,6 +62,7 @@ body {
     background-color: var(--clr-drk-1);
     margin-top: 40px;
     z-index: 1;
+    overflow: hidden;
 }
 
 main {
@@ -321,7 +321,6 @@ footer {
     box-shadow: 0 0 2em -1.5em rgb(0 0 0 / .3);
 }
 
-
 .adventure-button-container {
     /* position: relative; */
     display: flex;
@@ -378,8 +377,22 @@ footer {
     font-size: 1.8em;
     color: white;
     margin-top: 100px;
-    z-index: 15;
+    /* z-index: 15; */
     user-select: none;
+}
+
+.hex-display {
+    position: relative;
+    display: flex;
+    justify-content: center; align-items: center;
+    font-family: 'press start 2p', monospace;
+    font-size: 1.7em;
+    color: white;
+    margin-top: 597px;
+    /* z-index: 100; */
+    user-select: none;
+
+    transform: scale(.9,1)
 }
 
 .end-adventure-container {
