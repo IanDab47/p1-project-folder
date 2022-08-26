@@ -844,7 +844,7 @@ const genAdventureLayout = () => {
         MOVEMENT_SPEED = BASE_SPEED + (((rounds) * BASE_ROUND_MULTIPLIER + 1)*.6)
         SPAWN_RATE = 1600 / (Math.pow(rounds + 1, BASE_ROUND_MULTIPLIER / 2.4))
         ENEMIES_PER_ROUND = Math.ceil(BASE_NUMBER_OF_ENEMIES * ((BASE_ROUND_MULTIPLIER * rounds) + 1))
-        // ENEMIES_PER_ROUND = 1 // SHORTENS ENEMY COUNT TO 1
+        // ENEMIES_PER_ROUND = 1 // SHORTENS ENEMY COUNT TO 1git
         enemyClr = clrFills[randClr()]
     }
     
