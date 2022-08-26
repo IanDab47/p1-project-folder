@@ -253,7 +253,9 @@ const genTimedLayout = (gameType) => {
 
                         prevClrDisplay.style.background = `#${prevClr}`
                         prevGuessDisplay.style.background = `#${plyrOne.guesses}`
-                        prevGuessAcc.innerText = `${calcGuess(plyrOne.guesses)}%`
+                        prevGuessAcc.innerText = `${calcGuess(plyrOne.guesses)}% Match`
+
+                        pracCtnr.style.boxShadow = '0 0 9px rgb(0 0 0 / .4)'
                         
                         // Repeat round
                         gameStart()
