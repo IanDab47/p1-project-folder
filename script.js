@@ -502,7 +502,7 @@ const genTimedLayout = (gameType) => {
     if(gameType === 'spd') {timeDisplay.innerText = '00:00.000'}
     if(gameType !== 'prac') {plyrInfo.innerText = `${plyrOne.name}! Please start your timer to begin`}
     prmpt.innerText = 'Guess the color that appears to the right of the screen.'
-    if(gameType === 'spd'){rndStart.innerText = 'Start Timer'}
+    if(gameType !== 'prac'){rndStart.innerText = 'Start Timer'}
     if(gameType === 'prac'){rndStart.innerText = 'Start Practice'}
     plyrGuess.placeholder = '#00FFCC'
     rndEnd.innerText = 'Enter Guess'
