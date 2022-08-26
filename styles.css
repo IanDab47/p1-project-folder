@@ -153,6 +153,17 @@ footer {
     z-index: -1;
 }
 
+.menu-container {
+    position: absolute;
+    top: 0; left: 0;
+    display: flex;
+    justify-content: center; align-items: center;
+    background: transparent;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+}
+
 .menu-name {
     font-family: lato, sans-serif;
     font-size: 1.8em; font-weight: 900;
@@ -360,7 +371,6 @@ footer {
     gap: 1.23em;
     top: -8vh;
     width: 25%;
-    
 }
 
 .adventure-tutorial {
@@ -486,6 +496,43 @@ footer {
 .return-button:hover {
     background: rgb(170 170 220 / .55);
     box-shadow:0 0 .8em rgb(0 0 0 / .3)
+}
+
+.restart-menu {
+    z-index: 30;
+    position: absolute;
+    width: 100vmax; height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; align-content: center;
+    background: rgb(0 0 0 / .5);
+}
+
+.restart-menu-text {
+    font-family: silkscreen, sans-serif;
+    font-size: 3.8em; font-weight: 400;
+    /* position: absolute; */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; align-items: space-evenly;
+    padding: .5em 0;
+    width: 40%; height: 25%;
+    border: 5px solid var(--clr-drk-2);
+    border-radius: 4vh;
+    box-shadow: inset 0 0 .5em .2em var(--shdw-lig-act);
+    background: radial-gradient(var(--clr-lig-act) 80%, var(--shdw-lig-act));
+}
+
+.menu-button-container {
+    position: relative;
+    display: flex;
+    flex-direction: row; flex-wrap: wrap;
+    align-content: end;
+    gap: 1.23em;
+    font-family: silkscreen, sans-serif;
+    font-size: 1.3em; font-weight: 400;
+    top: -10vh;
+    width: 35%;
 }
 
 #title-pick,

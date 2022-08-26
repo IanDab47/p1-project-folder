@@ -16,8 +16,10 @@ const pracBtn = document.querySelector('#prac')
 const homeBtnArr = [pvpBtn, spdBtn, advBtn, pracBtn]
 
 const gameCtnr = document.querySelector('.game-container')
+const menuCtnr = document.querySelector('.menu-container')
 
 const returnHome = () => {
+    menuClear()
     while(gameCtnr.firstChild) {
         gameCtnr.firstChild.remove()
     }
@@ -25,6 +27,22 @@ const returnHome = () => {
     gameCtnr.style.background = 'transparent'
     homeTgl--
     cycleHomeBtns()
+}
+
+const gameClear = () => {
+    while(gameCtnr.firstChild) {
+        gameCtnr.firstChild.remove()
+    }
+    gameCtnr.style.zIndex = -1
+    gameCtnr.style.background = 'transparent'
+}
+
+const menuClear = () => {
+    while(menuCtnr.firstChild) {
+        menuCtnr.firstChild.remove()
+    }
+    menuCtnr.style.zIndex = -1
+    menuCtnr.style.background = 'transparent'
 }
 
 const capName = (name) => {
@@ -481,6 +499,84 @@ const genTimedLayout = (gameType) => {
         highscores.time[index] = plyrOne.time
     }
 
+    // const promptHome = () => {
+    //     // Create return menu elements
+    //     const returnMenu = document.createElement('div')
+    //     const menuText = document.createElement('div')
+    //     const btnCtnr = document.createElement('div')
+    //     const confirmBtn = document.createElement('button')
+    //     const cancelBtn = document.createElement('button')
+    
+    //     // Append elements to display return menu
+    //     btnCtnr.append(confirmBtn, cancelBtn)
+    //     returnMenu.append(menuText, btnCtnr)
+    //     gameCtnr.append(returnMenu)
+    
+    //     // Give elements corresponding class names
+    //     returnMenu.classList.add('restart-menu')
+    //     menuText.classList.add('restart-menu-text')
+    //     btnCtnr.classList.add('adventure-button-container')
+    //     confirmBtn.classList.add('return-button', 'verify-pos')
+    //     cancelBtn.classList.add('return-button', 'verify-pos')
+    
+    //     // Give text to necessary elements
+    //     menuText.innerText = 'Return Home?'
+    //     confirmBtn.innerText = 'Restart'
+    //     cancelBtn.innerText = 'Cancel'
+        
+    //     // Add functionality to confirm and cancel buttons
+    //     confirmBtn.addEventListener('click', returnHome)
+    //     cancelBtn.addEventListener('click', function cancel() {
+    //         returnMenu.remove()
+    //         returnMenu.classList.remove()
+    //         cancelBtn.removeEventListener('click', cancel)
+    //     })
+    // }
+
+    const promptRestart = () => {
+
+        menuCtnr.style.zIndex = 11
+        menuCtnr.style.background = 'rgb(0 0 0 / .3)'
+
+        // Create restart menu elements
+        const restartMenu = document.createElement('div')
+        const menuText = document.createElement('div')
+        const btnCtnr = document.createElement('div')
+        const confirmBtn = document.createElement('button')
+        const cancelBtn = document.createElement('button')
+    
+        // Append elements to display restart menu
+        btnCtnr.append(confirmBtn, cancelBtn)
+        restartMenu.append(menuText, btnCtnr)
+        menuCtnr.append(restartMenu)
+    
+        // Give elements corresponding class names
+        restartMenu.classList.add('restart-menu')
+        menuText.classList.add('restart-menu-text')
+        btnCtnr.classList.add('menu-button-container')
+        confirmBtn.classList.add('return-button', 'verify-pos')
+        cancelBtn.classList.add('return-button', 'verify-pos')
+    
+        // Give text to necessary elements
+        menuText.innerText = 'Restart Game?'
+        confirmBtn.innerText = 'Confirm'
+        cancelBtn.innerText = 'Cancel'
+        
+        // Add functionality to confirm and cancel buttons
+        if(gameType === 'pvp') {confirmBtn.addEventListener('click', function restartMulti() {
+            menuClear()
+            promptMultiplayer()
+        })}
+        if(gameType === 'spd') {confirmBtn.addEventListener('click', function restartSpeed() {
+            menuClear()
+            promptSinglePlayer('spd')
+        })}
+        cancelBtn.addEventListener('click', function cancel() {
+            menuClear()
+            cancelBtn.removeEventListener('click', cancel)
+        })
+    }
+
     // Assign corresponding classes to elements
     btnCtnr.classList.add('timed-button-container')
     clrBG.classList.add('timed-clr')
@@ -508,6 +604,11 @@ const genTimedLayout = (gameType) => {
     rndEnd.innerText = 'Enter Guess'
     homeBtn.innerText = 'HOME'
     retryBtn.innerText = 'Restart'
+
+    // Add restart and return button functionality
+    if(gameType === 'pvp') {retryBtn.addEventListener('click', promptRestart)}
+    if(gameType === 'spd') {retryBtn.addEventListener('click', promptRestart)}
+    homeBtn.addEventListener('click', returnHome)
     
     //   :: SECURITY MEASURES ::   //
     // Prevents early player submission to refresh page
@@ -883,8 +984,7 @@ const genAdventureLayout = () => {
 
 const promptMultiplayer = () => {
     // Brings Game Screen Forward
-    gameCtnr.style.zIndex = 10
-
+    menuCtnr.style.zIndex = 10
     
     // Create Mulitplayer Prompts
     const menuNameOne = document.createElement('div')
@@ -895,7 +995,7 @@ const promptMultiplayer = () => {
     const nameFormTwo = document.createElement('form')
 
     // Add CSS styling to major elements
-    gameCtnr.style.backgroundColor = 'rgb(0 0 0 / .5)'
+    menuCtnr.style.backgroundColor = 'rgb(0 0 0 / .5)'
     menuNameOne.classList.add('menu-name')
     menuNameTwo.classList.add('menu-name')
 
@@ -919,7 +1019,7 @@ const promptMultiplayer = () => {
         nameFormOne.removeEventListener('submit', handler)
         menuNameOne.remove(inputNameOne)
         nameFormOne.remove(menuNameOne)
-        gameCtnr.append(nameFormTwo)
+        menuCtnr.append(nameFormTwo)
         nameFormTwo.append(menuNameTwo)
         inputNameTwo.focus()
         
@@ -934,12 +1034,14 @@ const promptMultiplayer = () => {
             nameFormTwo.remove(menuNameTwo)
             
             // Generates Timed Layout
+            menuClear()
+            gameClear()
             genTimedLayout('pvp')
         })
     })
     
     // Display first menu
-    gameCtnr.append(nameFormOne)
+    menuCtnr.append(nameFormOne)
     nameFormOne.append(menuNameOne)
     inputNameOne.focus()
     // Continue Player 1 processing -->
@@ -947,7 +1049,7 @@ const promptMultiplayer = () => {
 
 const promptSinglePlayer = (gameType) => {
     // Brings Game Screen Forward
-    gameCtnr.style.zIndex = 10
+    menuCtnr.style.zIndex = 10
 
     // Create Singleplayer Prompt
     const menuNameOne = document.createElement('div')
@@ -955,7 +1057,7 @@ const promptSinglePlayer = (gameType) => {
     const nameFormOne = document.createElement('form')
 
     // Add CSS styling to major elements
-    gameCtnr.style.backgroundColor = 'rgb(0 0 0 / .5)'
+    menuCtnr.style.backgroundColor = 'rgb(0 0 0 / .5)'
     menuNameOne.classList.add('menu-name')
 
     // Give menus text
@@ -976,69 +1078,22 @@ const promptSinglePlayer = (gameType) => {
         nameFormOne.remove(menuNameOne)
         
         // Generates Timed Layout
-        if(gameType === 'spd') {genTimedLayout('spd')}
-        if(gameType === 'pve') {genAdventureLayout()}
+        if(gameType === 'spd') {
+            menuClear()
+            gameClear()
+            genTimedLayout('spd')}
+
+        if(gameType === 'pve') {
+            genAdventureLayout()
+        }
     })
     
     // Display first menu
-    gameCtnr.append(nameFormOne)
+    menuCtnr.append(nameFormOne)
     nameFormOne.append(menuNameOne)
     inputNameOne.focus()
     // Continue Player 1 processing -->
 
-}
-
-const promptRestart = (gameType) => {
-    // Create restart menu elements
-    const restartMenu = document.createElement('div')
-    const menuText = document.createElement('div')
-    const btnCtnr = document.createElement('div')
-    const confirmBtn = document.createElement('button')
-    const cancelBtn = document.createElement('button')
-
-    // Append elements to display restart menu
-    btnCtnr.append(confirmBtn, cancelBtn)
-    restartMenu.append(menuText, btnCtnr)
-    gameCtnr.append(restartMenu)
-
-    // Give elements corresponding class names
-    restartMenu.classList.add('restart-menu')
-    btnCtnr.classList.add('adventure-button-container')
-    confirmBtn.classList.add('return-button')
-    cancelBtn.classList.add('return-button')
-
-    // Give text to necessary elements
-    menuText.innerText = 'Restart Game?'
-    confirmBtn.innerText = 'Restart'
-    cancelBtn.innerText = 'Cancel'
-    
-    if(gameType === 'pvp') {confirmBtn.addEventListener('click', function restartMulti() {promptMultiplayer()})}
-    if(gameType === 'spd') {confirmBtn.addEventListener('click', function restartSpeed() {promptSinglePlayer('spd')})}
-}
-
-const promptHome = () => {
-    // Create return menu elements
-    const returnMenu = document.createElement('div')
-    const menuText = document.createElement('div')
-    const btnCtnr = document.createElement('div')
-    const confirmBtn = document.createElement('button')
-    const cancelBtn = document.createElement('button')
-
-    // Append elements to display return menu
-    btnCtnr.append(confirmBtn, cancelBtn)
-    returnMenu.append(menuText, btnCtnr)
-    gameCtnr.append(returnMenu)
-
-    // Give elements corresponding class names
-    returnMenu.classList.add('restart-menu')
-    btnCtnr.classList.add('adventure-button-container')
-    confirmBtn.classList.add('return-button')
-    cancelBtn.classList.add('return-button')
-
-    // Give text to necessary elements
-    menuText.innerText = 'Return Home?'
-    confirmBtn.innerText = 'Restart'
-    cancelBtn.innerText = 'Cancel'
 }
 
 const startMulti = () => {
