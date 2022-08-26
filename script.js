@@ -128,6 +128,7 @@ const genTimedLayout = (gameType) => {
 
     // Create array for color storage
     let gameClrs = []
+    let prevClr = ''
 
     // Create game length for each game
     const rounds = 5
@@ -137,6 +138,10 @@ const genTimedLayout = (gameType) => {
     // Create elements for the timed layout design
     const btnCtnr = document.createElement('div')
     const clrBG = document.createElement('div')
+    const pracCtnr = document.createElement('div')
+    const prevClrDisplay = document.createElement('div')
+    const prevGuessDisplay = document.createElement('div')
+    const prevGuessAcc = document.createElement('div')
     const fillBox = document.createElement('div')
     const plyrInfo = document.createElement('div')
     const rndInfo = document.createElement('div')
@@ -233,13 +238,18 @@ const genTimedLayout = (gameType) => {
                 }
                 if(gameType === 'prac') {
                     // Add guess to player guesses and clear input
-                    if(guessProtect(plyrOne)) {plyrOne.newGuess(plyrGuess.value)}
+                    if(guessProtect(plyrOne)) {plyrOne.guesses = plyrGuess.value}
                         plyrGuess.value = ''
 
                         // Display new color to guess
+                        prevClr = `#${newClr}`
                         newClr = newHexCode()
                         clrBG.style.background = `#${newClr}`
-                        gameClrs.push(newClr)
+                        // gameClrs.push(newClr)
+
+                        prevClrDisplay.style.background = prevClr
+                        prevGuessDisplay.style.background = `#${plyrOne.guesses}`
+                        prevGuessAcc.innerText = calcGuess(plyrOne.guesses)
                         
                         // Repeat round
                         gameStart()
@@ -479,6 +489,39 @@ const genTimedLayout = (gameType) => {
         })
         player.calcTotalAcc()
     }
+   
+    const calcGuess = (guess) => {
+        // Spread characters into arrays for comparison
+        let plyrArr = [...guess]
+        let gameArr = [prevClr]
+        
+        // Declare loop variables
+        const hexLength = 6
+        let i = 0
+        let accuracy = 100
+        const maxMultiplier = 2.0
+        const minMultiplier = 0.2
+
+        // Iterate through both strings
+        while(i < hexLength) {
+            const arrPos = gameArr.length % 2
+            // Remove character 1 by 1 from each array and 
+            const plyrChar = parseInt(plyrArr.shift(), 16)
+            const gameChar = parseInt(gameArr.shift(), 16)
+
+            // Calculate accuracy based on hex position
+            if(plyrChar !== gameChar && arrPos === 0) {
+                accuracy -= Math.round(Math.abs(plyrChar - gameChar) * maxMultiplier)
+            }
+            else if(plyrChar !== gameChar) {
+                accuracy -= Math.round(Math.abs(plyrChar - gameChar) * minMultiplier)
+            }
+
+            // Increment up based on gamemode
+            i++
+        }
+        return accuracy
+    }
 
     // Inserts new player score into highscore object arrays
     const newHighscore = (index) => {
@@ -500,41 +543,47 @@ const genTimedLayout = (gameType) => {
     }
 
     // const promptHome = () => {
-    //     // Create return menu elements
+    //     // Change menu style to appear upfront
+    //     menuCtnr.style.zIndex = 11
+    //     menuCtnr.style.background = 'rgb(0 0 0 / .3)'
+
+    //     // Create restart menu elements
     //     const returnMenu = document.createElement('div')
     //     const menuText = document.createElement('div')
     //     const btnCtnr = document.createElement('div')
     //     const confirmBtn = document.createElement('button')
     //     const cancelBtn = document.createElement('button')
     
-    //     // Append elements to display return menu
+    //     // Append elements to display restart menu
     //     btnCtnr.append(confirmBtn, cancelBtn)
     //     returnMenu.append(menuText, btnCtnr)
-    //     gameCtnr.append(returnMenu)
+    //     menuCtnr.append(returnMenu)
     
     //     // Give elements corresponding class names
     //     returnMenu.classList.add('restart-menu')
     //     menuText.classList.add('restart-menu-text')
-    //     btnCtnr.classList.add('adventure-button-container')
+    //     btnCtnr.classList.add('menu-button-container')
     //     confirmBtn.classList.add('return-button', 'verify-pos')
     //     cancelBtn.classList.add('return-button', 'verify-pos')
     
     //     // Give text to necessary elements
     //     menuText.innerText = 'Return Home?'
-    //     confirmBtn.innerText = 'Restart'
+    //     confirmBtn.innerText = 'Confirm'
     //     cancelBtn.innerText = 'Cancel'
         
     //     // Add functionality to confirm and cancel buttons
-    //     confirmBtn.addEventListener('click', returnHome)
+    //     confirmBtn.addEventListener('click', function home() {
+    //         returnHome()
+    //         confirmBtn.removeEventListener('click', home)
+    //     })
     //     cancelBtn.addEventListener('click', function cancel() {
-    //         returnMenu.remove()
-    //         returnMenu.classList.remove()
+    //         menuClear()
     //         cancelBtn.removeEventListener('click', cancel)
     //     })
     // }
 
     const promptRestart = () => {
-
+        // Change menu style to appear upfront
         menuCtnr.style.zIndex = 11
         menuCtnr.style.background = 'rgb(0 0 0 / .3)'
 
@@ -566,10 +615,12 @@ const genTimedLayout = (gameType) => {
         if(gameType === 'pvp') {confirmBtn.addEventListener('click', function restartMulti() {
             menuClear()
             promptMultiplayer()
+            confirmBtn.removeEventListener('click', restartMulti)
         })}
         if(gameType === 'spd') {confirmBtn.addEventListener('click', function restartSpeed() {
             menuClear()
             promptSinglePlayer('spd')
+            confirmBtn.removeEventListener('click', restartSpeed)
         })}
         cancelBtn.addEventListener('click', function cancel() {
             menuClear()
@@ -580,6 +631,10 @@ const genTimedLayout = (gameType) => {
     // Assign corresponding classes to elements
     btnCtnr.classList.add('timed-button-container')
     clrBG.classList.add('timed-clr')
+    pracCtnr.classList.add('previous-display-container')
+    prevClrDisplay.classList.add('previous-color')
+    prevGuessDisplay.classList.add('previous-guess')
+    prevGuessAcc.classList.add('previous-guess-text')
     fillBox.classList.add('game-info-box')
     plyrInfo.classList.add('player-info')
     rndInfo.classList.add('round-info')

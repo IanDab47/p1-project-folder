@@ -202,6 +202,21 @@ footer {
     /* border-radius: 1em 0 0 1em; */
 }
 
+.previous-color {
+    width: 100%; height: 100%;
+    position: absolute;
+    right: 0; bottom: 0;
+    background: hotpink;
+}
+
+.previous-guess {
+
+}
+
+.previous-guess-text {
+
+}
+
 .game-info-box {
     font-family: 'silkscreen', monospace;
     font-size: 1.4em; letter-spacing: -.14rem;
@@ -218,13 +233,13 @@ footer {
     display: inline;
 }
 
-.round-info {
+/* .round-info {
 
 }
 
 .round-prompt {
 
-}
+} */
 
 .timer {
     position: inherit;
