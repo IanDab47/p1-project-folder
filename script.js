@@ -989,7 +989,56 @@ const promptSinglePlayer = (gameType) => {
 }
 
 const promptRestart = (gameType) => {
+    // Create restart menu elements
+    const restartMenu = document.createElement('div')
+    const menuText = document.createElement('div')
+    const btnCtnr = document.createElement('div')
+    const confirmBtn = document.createElement('button')
+    const cancelBtn = document.createElement('button')
+
+    // Append elements to display restart menu
+    btnCtnr.append(confirmBtn, cancelBtn)
+    restartMenu.append(menuText, btnCtnr)
+    gameCtnr.append(restartMenu)
+
+    // Give elements corresponding class names
+    restartMenu.classList.add('restart-menu')
+    btnCtnr.classList.add('adventure-button-container')
+    confirmBtn.classList.add('return-button')
+    cancelBtn.classList.add('return-button')
+
+    // Give text to necessary elements
+    menuText.innerText = 'Restart Game?'
+    confirmBtn.innerText = 'Restart'
+    cancelBtn.innerText = 'Cancel'
     
+    if(gameType === 'pvp') {confirmBtn.addEventListener('click', function restartMulti() {promptMultiplayer()})}
+    if(gameType === 'spd') {confirmBtn.addEventListener('click', function restartSpeed() {promptSinglePlayer('spd')})}
+}
+
+const promptHome = () => {
+    // Create return menu elements
+    const returnMenu = document.createElement('div')
+    const menuText = document.createElement('div')
+    const btnCtnr = document.createElement('div')
+    const confirmBtn = document.createElement('button')
+    const cancelBtn = document.createElement('button')
+
+    // Append elements to display return menu
+    btnCtnr.append(confirmBtn, cancelBtn)
+    returnMenu.append(menuText, btnCtnr)
+    gameCtnr.append(returnMenu)
+
+    // Give elements corresponding class names
+    returnMenu.classList.add('restart-menu')
+    btnCtnr.classList.add('adventure-button-container')
+    confirmBtn.classList.add('return-button')
+    cancelBtn.classList.add('return-button')
+
+    // Give text to necessary elements
+    menuText.innerText = 'Return Home?'
+    confirmBtn.innerText = 'Restart'
+    cancelBtn.innerText = 'Cancel'
 }
 
 const startMulti = () => {
