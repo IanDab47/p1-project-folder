@@ -515,7 +515,8 @@ const genTimedLayout = (gameType) => {
     plyrGuessForm.addEventListener('submit', function handler(e) {e.preventDefault()})  
     
     // Generate initial layout
-    btnCtnr.append(homeBtn, retryBtn)
+    if(gameType !== 'prac') {btnCtnr.append(homeBtn, retryBtn)}
+    if(gameType === 'prac') {btnCtnr.append(homeBtn)}
     plyrGuessForm.append(plyrGuess, rndEnd)
     fillBox.append(plyrInfo, rndStart, rndInfo, prmpt, plyrGuessForm, btnCtnr)
     gameCtnr.append(clrBG, fillBox, timeDisplay)
@@ -985,6 +986,10 @@ const promptSinglePlayer = (gameType) => {
     inputNameOne.focus()
     // Continue Player 1 processing -->
 
+}
+
+const promptRestart = (gameType) => {
+    
 }
 
 const startMulti = () => {
