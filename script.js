@@ -161,7 +161,8 @@ const genTimedLayout = (gameType) => {
 
     // --> Return here for game function
     const gameStart = () => {
-        rndStart.addEventListener('click', function handler() {
+        if(gameClrs.length === 0 || gameType !== 'prac') 
+        {rndStart.addEventListener('click', function handler() {
             // Enable player submission
             plyrGuessForm.removeEventListener('submit', handler)
 
@@ -237,25 +238,51 @@ const genTimedLayout = (gameType) => {
                     })
                 }
                 if(gameType === 'prac') {
-                    // Add guess to player guesses and clear input
-                    if(guessProtect(plyrOne)) {plyrOne.guesses = plyrGuess.value}
+                    plyrGuessForm.addEventListener('submit', function guess(e) {
+                        e.preventDefault()
+                        plyrGuessForm.removeEventListener('submit', guess)
+                        // Add guess to player guesses and clear input
+                        if(guessProtect(plyrOne)) {plyrOne.guesses = plyrGuess.value}
                         plyrGuess.value = ''
 
                         // Display new color to guess
-                        prevClr = `#${newClr}`
+                        prevClr = newClr
                         newClr = newHexCode()
                         clrBG.style.background = `#${newClr}`
-                        // gameClrs.push(newClr)
+                        gameClrs.push(newClr)
 
-                        prevClrDisplay.style.background = prevClr
+                        prevClrDisplay.style.background = `#${prevClr}`
                         prevGuessDisplay.style.background = `#${plyrOne.guesses}`
-                        prevGuessAcc.innerText = calcGuess(plyrOne.guesses)
+                        prevGuessAcc.innerText = `${calcGuess(plyrOne.guesses)}%`
                         
                         // Repeat round
                         gameStart()
+                    })
                 }
             }
-        })
+        })}
+        else {
+            plyrGuessForm.addEventListener('submit', function guess(e) {
+                e.preventDefault()
+                plyrGuessForm.removeEventListener('submit', guess)
+                // Add guess to player guesses and clear input
+                plyrOne.guesses = plyrGuess.value
+                plyrGuess.value = ''
+
+                // Display new color to guess
+                prevClr = newClr
+                newClr = newHexCode()
+                clrBG.style.background = `#${newClr}`
+                gameClrs.push(newClr)
+
+                prevClrDisplay.style.background = `#${prevClr}`
+                prevGuessDisplay.style.background = `#${plyrOne.guesses}`
+                prevGuessAcc.innerText = `${calcGuess(plyrOne.guesses)}% Match`
+                
+                // Repeat round
+                gameStart()
+            })
+        }
     }
 
     // --> Return to finish game
@@ -493,7 +520,7 @@ const genTimedLayout = (gameType) => {
     const calcGuess = (guess) => {
         // Spread characters into arrays for comparison
         let plyrArr = [...guess]
-        let gameArr = [prevClr]
+        let gameArr = [...prevClr]
         
         // Declare loop variables
         const hexLength = 6
@@ -659,6 +686,7 @@ const genTimedLayout = (gameType) => {
     rndEnd.innerText = 'Enter Guess'
     homeBtn.innerText = 'HOME'
     retryBtn.innerText = 'Restart'
+    prevGuessAcc.innerText = ''
 
     // Add restart and return button functionality
     if(gameType === 'pvp') {retryBtn.addEventListener('click', promptRestart)}
@@ -673,9 +701,11 @@ const genTimedLayout = (gameType) => {
     // Generate initial layout
     if(gameType !== 'prac') {btnCtnr.append(homeBtn, retryBtn)}
     if(gameType === 'prac') {btnCtnr.append(homeBtn)}
+    prevGuessDisplay.append(prevGuessAcc)
+    pracCtnr.append(prevGuessDisplay, prevClrDisplay)
     plyrGuessForm.append(plyrGuess, rndEnd)
     fillBox.append(plyrInfo, rndStart, rndInfo, prmpt, plyrGuessForm, btnCtnr)
-    gameCtnr.append(clrBG, fillBox, timeDisplay)
+    gameCtnr.append(clrBG, fillBox, timeDisplay, pracCtnr)
     
     // Start game after Timer clicked
     gameStart()
@@ -683,6 +713,8 @@ const genTimedLayout = (gameType) => {
 }
 
 const genAdventureLayout = () => {
+    gameCtnr.style.zIndex = 10
+
     let gameRunning = true
     let roundRunning = false
 
@@ -1139,6 +1171,8 @@ const promptSinglePlayer = (gameType) => {
             genTimedLayout('spd')}
 
         if(gameType === 'pve') {
+            menuClear()
+            gameClear()
             genAdventureLayout()
         }
     })

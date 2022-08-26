@@ -202,19 +202,28 @@ footer {
     /* border-radius: 1em 0 0 1em; */
 }
 
-.previous-color {
-    width: 100%; height: 100%;
+.previous-display-container {
     position: absolute;
     right: 0; bottom: 0;
-    background: hotpink;
+    width: 27vw; height: 20vh;
+    display: flex;
+}
+
+.previous-color {
+    width: 50%; height: 100%;
+    background: transparent;
 }
 
 .previous-guess {
-
+    width: 50%; height: 100%;
+    background: transparent;
 }
 
 .previous-guess-text {
-
+    font-family: lato, sans-serif;
+    font-size: 1.8em; font-weight: bold;
+    padding: .3em .6em;
+    text-align: center;
 }
 
 .game-info-box {
