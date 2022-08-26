@@ -303,7 +303,7 @@ const genTimedLayout = (gameType) => {
         const plyrOneCtnr = document.createElement('div')
         const plyrTwoCtnr = document.createElement('div')
         const restartBtn = document.createElement('button')
-        const homeBtn = document.createElement('button')
+        const finishText = document.createElement('div')
         
         // Assign classes to corresponding elements
         winCtnr.classList.add('end-display-container')
@@ -312,11 +312,12 @@ const genTimedLayout = (gameType) => {
         plyrOneCtnr.classList.add('player-one-info')
         plyrTwoCtnr.classList.add('player-two-info')
         restartBtn.classList.add('restart-button')
-        homeBtn.classList.add('home-button')
+        if(gameType === 'pvp') {finishText.classList.add('leave-text')}
+        if(gameType === 'spd') {finishText.classList.add('leave-text-speed')}
         
         // --> Return here to display guesses and accuracy
         const displayPlayerCalc = (player) => {
-            let plyrHighscore = ''
+            // let plyrHighscore = ''
             const plyrName = document.createElement('div')
             
             // Assign name values for scores
@@ -417,8 +418,15 @@ const genTimedLayout = (gameType) => {
             plyrCtnr.append(plyrOneCtnr)
         }
         // Append elements to corresponding containers
-        winCtnr.append(plyrCtnr)
-        gameCtnr.append(winCtnr)
+        menuCtnr.style.zIndex = 10
+        finishText.innerText = 'Click to Continue'
+        winCtnr.append(plyrCtnr, finishText)
+        menuCtnr.append(winCtnr)
+
+        document.addEventListener('click', function clickToLeave() {
+            menuClear()
+            document.removeEventListener('click', clickToLeave)
+        })
     }
 
     const countDownTimer = () => {
@@ -642,11 +650,13 @@ const genTimedLayout = (gameType) => {
         
         // Add functionality to confirm and cancel buttons
         if(gameType === 'pvp') {confirmBtn.addEventListener('click', function restartMulti() {
+            resetScores()
             menuClear()
             promptMultiplayer()
             confirmBtn.removeEventListener('click', restartMulti)
         })}
         if(gameType === 'spd') {confirmBtn.addEventListener('click', function restartSpeed() {
+            resetScores()
             menuClear()
             promptSinglePlayer('spd')
             confirmBtn.removeEventListener('click', restartSpeed)
@@ -655,6 +665,13 @@ const genTimedLayout = (gameType) => {
             menuClear()
             cancelBtn.removeEventListener('click', cancel)
         })
+    }
+
+    const resetScores = () => {
+        plyrOne.guesses = []
+        plyrOne.guessAcc = []
+        plyrTwo.guesses = []
+        plyrTwo.guessAcc = []
     }
 
     // Assign corresponding classes to elements
@@ -777,7 +794,7 @@ const genAdventureLayout = () => {
     hexDisplay.classList.add('hex-display')
     
     tutorial.innerText = 'To play the game, you must shoot all enemies without dying.\nAn enemy is any block that is the color value of the one displayed below the screen.\nIf an enemy hits you, makes it past you, or you hit the wrong enemy, you lose a life.\nIf you lose all 3 lives, you will die and the game is over.\nPress the start button whenever you are ready to begin!'
-    startBtn.innerText = 'Start Adventure!'
+    // startBtn.innerText = 'Start Adventure!'
     homeBtn.innerText = 'Home'
     retryBtn.innerText = 'Retry'
     
@@ -827,7 +844,7 @@ const genAdventureLayout = () => {
         MOVEMENT_SPEED = BASE_SPEED + (((rounds) * BASE_ROUND_MULTIPLIER + 1)*.6)
         SPAWN_RATE = 1600 / (Math.pow(rounds + 1, BASE_ROUND_MULTIPLIER / 2.4))
         ENEMIES_PER_ROUND = Math.ceil(BASE_NUMBER_OF_ENEMIES * ((BASE_ROUND_MULTIPLIER * rounds) + 1))
-        // ENEMIES_PER_ROUND = BASE_NUMBER_OF_ENEMIES // SHORTENS ENEMY COUNT TO 10
+        // ENEMIES_PER_ROUND = 1 // SHORTENS ENEMY COUNT TO 1
         enemyClr = clrFills[randClr()]
     }
     
@@ -873,9 +890,9 @@ const genAdventureLayout = () => {
     }
     canvas.addEventListener('click', shoot)
     
-    
     // --> Return here to start game
     const roundStart = () => {
+        startBtn.innerText = 'Start Adventure!'
         updateFormulas()
         if(rounds === 0) {lives = 3}
         // console.log(MOVEMENT_SPEED, SPAWN_RATE, ENEMIES_PER_ROUND)
@@ -899,7 +916,6 @@ const genAdventureLayout = () => {
                 
                 // Begin spawning enemies
                 spawnEnemyInterval = setInterval(spawnEnemy, SPAWN_RATE)
-                                
             })
         }
     }
@@ -924,14 +940,14 @@ const genAdventureLayout = () => {
         gameCtnr.appendChild(resultCtnr)
         
         document.addEventListener('click', function clickContinue() {
+            document.removeEventListener('click', clickContinue)
             resultCtnr.classList.remove('end-adventure-container')
             resultCtnr.innerText = ''
             enemy = []
             // lives = 3
+            roundStart()
             startBtn.classList.remove('adventure-start-clicked')
             startBtn.classList.add('adventure-start-button')
-            roundStart()
-            document.removeEventListener('click', clickContinue)
         })
     }
     
@@ -941,9 +957,9 @@ const genAdventureLayout = () => {
     }
     
     const youWin = () => {
-        gameRunning = false
-        // clearInterval(gameIs)
-        bullets = []
+        clearInterval(spawnEnemyInterval)
+        roundRunning = false
+        rounds = 0
         
         const resultText = document.createElement('div')
         const plyrCtnr = document.createElement('div')
@@ -959,11 +975,13 @@ const genAdventureLayout = () => {
         gameCtnr.appendChild(resultCtnr)
         
         document.addEventListener('click', function clickContinue() {
+            document.removeEventListener('click', clickContinue)
             resultCtnr.classList.remove('end-adventure-container')
             resultCtnr.innerText = ''
-            
-            gameIs = setInterval(gameLoop, mspf)
-            document.removeEventListener('click', clickContinue)
+            enemy = []
+            roundStart()
+            // gameRunning = true
+            // gameIs = setInterval(gameLoop, mspf)
         })
     }
     

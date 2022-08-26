@@ -367,6 +367,26 @@ footer {
     transform: scale(.95,1.1);
 }
 
+.leave-text {
+    /* position: absolute; */
+    display: block;
+    font-family: lato, sans-serif;
+    font-size: 3.4em; font-weight: bold;
+    text-align: center;
+    margin-top: -12vh;
+    padding-bottom: 10vh;
+}
+
+.leave-text-speed {
+    /* position: absolute; */
+    display: block;
+    font-family: lato, sans-serif;
+    font-size: 1.9em; font-weight: bold;
+    text-align: center;
+    margin-top: -6vh;
+    padding-bottom: 10vh;
+}
+
 .adventure-container {
     position: absolute;
     top: 22vh;
