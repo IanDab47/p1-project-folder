@@ -25,6 +25,9 @@ const returnHome = () => {
     }
     gameCtnr.style.zIndex = -1
     gameCtnr.style.background = 'transparent'
+
+    resetScores()
+
     homeTgl--
     cycleHomeBtns()
 }
@@ -94,8 +97,14 @@ const cycleHomeBtns = () => {
         pracBtn.addEventListener('click', startPrac)
     }
 }
-
 document.addEventListener('keydown', (e) => {if(e.key === 'Escape') {returnHome()}})
+
+const resetScores = () => {
+    plyrOne.guesses = []
+    plyrOne.guessAcc = []
+    plyrTwo.guesses = []
+    plyrTwo.guessAcc = []
+}
 
 const newHexCode = () => {
     let hexCode = []
@@ -665,13 +674,6 @@ const genTimedLayout = (gameType) => {
             menuClear()
             cancelBtn.removeEventListener('click', cancel)
         })
-    }
-
-    const resetScores = () => {
-        plyrOne.guesses = []
-        plyrOne.guessAcc = []
-        plyrTwo.guesses = []
-        plyrTwo.guessAcc = []
     }
 
     // Assign corresponding classes to elements

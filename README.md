@@ -82,5 +82,3 @@ Post-Product Reflection:
 - Organization and documentation is a great technique to get back on track quicker when returning from breaks or other events that remove me from my work. Even if it's for less than a minute.
 
 - Canvas is a much trickier element to work with than initially determined. However, after messing up and messing about with it's properties, I am confident in using it more in the future. (just please don't ask me to)
-
-- 
