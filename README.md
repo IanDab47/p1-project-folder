@@ -1,5 +1,7 @@
 # :: pick the color ::
 
+Play The Game: https://iandab47.github.io/p1-project-folder/
+
 "pick the color" is a simple idea with many different ways to play. There are 4 different modes for you to choose from: Multiplayer, Speedrun, Adventure, and Practice. Each mode will test you on how well you can determine the values of a digital color.
 
 ![Home Screen](https://i.imgur.com/JSvofRB.png)
@@ -17,6 +19,12 @@ Adventure Mode will place you in a box where you'll have to defend your territor
 Practice Mode lets you hone your color evaluating skills to your heart's content. Infinitely guess the displayed color and see how close you get every time. You'll be able to see your most previous estimate after every guess
 
 ![Practice Mode](https://i.imgur.com/QNjuVuw.png)
+
+# Tech Used:
+- HTML5
+- Canvas
+- Vanilla CSS
+- Vanilla JavaScript
 
 # MVP Goals:
 ## PvP:
@@ -69,3 +77,10 @@ Practice Mode lets you hone your color evaluating skills to your heart's content
 - Prevent players from creating vulgar or insulting usernames
 - Light & Dark backgrounds
 - SFX!!!
+
+Post-Product Reflection:
+- Organization and documentation is a great technique to get back on track quicker when returning from breaks or other events that remove me from my work. Even if it's for less than a minute.
+
+- Canvas is a much trickier element to work with than initially determined. However, after messing up and messing about with it's properties, I am confident in using it more in the future. (just please don't ask me to)
+
+- 

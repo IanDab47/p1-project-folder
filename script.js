@@ -877,7 +877,6 @@ const genAdventureLayout = () => {
     // --> Return here to start game
     const roundStart = () => {
         updateFormulas()
-        console.log(enemy)
         if(rounds === 0) {lives = 3}
         // console.log(MOVEMENT_SPEED, SPAWN_RATE, ENEMIES_PER_ROUND)
         
@@ -1065,7 +1064,6 @@ const genAdventureLayout = () => {
     // Run game
     homeBtn.addEventListener('click', returnHomeFromAdv)
     retryBtn.addEventListener('click', resetGame)
-    console.log('retry')
     let gameIs = setInterval(gameLoop, mspf)
     roundStart()
     // Continue to start game -->
