@@ -23,7 +23,7 @@
 
 /* GOOGLE FONTS */
 /* SILKSCREEN */
-@import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
 /* LATO */
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 /* PRESS START 2P */
@@ -285,6 +285,7 @@ footer {
 /* TIMER PAGE */
 .game-info-box {
   position: absolute;
+  top: 18vh;
   left: clamp(.5rem, calc(60% - 30rem), 12.5rem);
   width: clamp(8rem, calc(20vw + 20rem), 37rem); 
   height: max-content;
@@ -362,63 +363,76 @@ footer {
 .timed-button-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-top: 4vh;
   width: 100%;
 }
 
-.timed-button-container > button{
-  width: 48%;
+.timed-button-container > button {
+  width: clamp(1px, 48%, 14rem);
+  font-size: .8em;
 }
 
 .end-display-container {
   position: absolute;
   width: 100vmax; height: 100vh;
+  top: 0; left: 0;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  background: rgb(0 0 0 / .5)
+  background: rgb(0 0 0 / .5);
+  isolation: isolate;
 }
 
 .end-display-text {
-    position: relative;
-    top: 10vh;
-    font-family: lato, sans-serif;
-    font-size: 3.3rem; font-weight: 900;
-    color: black;
+  font-size: 3.7rem; 
+  text-align: center;
+  color: black;
+  margin-bottom: 15rem;
 }
 
 .player-display-container {
-    font-family: lato, sans-serif;
-    font-size: 1.8em; font-weight: 400;
-    /* position: absolute; */
-    display: flex;
-    flex-wrap: wrap;
-    align-content: start;
-    padding-top: -1em;
-    width: 55%; height: 70%;
-    border: 5px solid var(--clr-drk-2);
-    border-radius: 4vh;
-    box-shadow: inset 0 0 .5em .2em var(--shdw-lig-act);
-    background: radial-gradient(var(--clr-lig-act) 80%, var(--shdw-lig-act));
+  position: absolute;
+  left: 22.5%;
+  display: flex;
+  gap: 12vw;
+  justify-content: center;
+  align-content: start;
+  width: 55%; height: 70%;
+  font-family: 'lato', sans-serif;
+  font-size: 1.8em; 
+  font-weight: 400;
+  border: 5px solid var(--clr-drk-2);
+  border-radius: 4vh;
+  box-shadow: inset 0 0 .5em .2em var(--shdw-lig-act);
+  background: radial-gradient(var(--clr-lig-act) 80%, var(--shdw-lig-act));
+  z-index: -1;
 }
+  .player-one-info {
+      position: relative;
+      top: 13vh;
+      display: flex;
+      gap: 25px;
+      flex-direction: column;
+      align-items: center;
+  }
+  .player-two-info {
+      position: relative;
+      top: 13vh;
+      display: flex;
+      gap: 25px;
+      flex-direction: column;
+      align-items: center;
+  }
 
-.player-one-info {
-    /* display: inline; */
-    position: relative;
-    top: 13vh;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.player-two-info {
-    position: relative;
-    top: 13vh;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
+.leave-text,
+.leave-text-speed {
+  font-size: 1em;
+  color: var(--clr-drk-1);
+  text-align: center;
+  margin-top: 18rem;
 }
 
 .highscore-list {
@@ -432,7 +446,8 @@ footer {
 .previous-display-container {
   position: absolute;
   right: 0; bottom: 0;
-  width: 27vw; height: 20vh;
+  width: clamp(1rem, 33%, 30rem); 
+  height: 20vh;
   display: flex;
 }
 
