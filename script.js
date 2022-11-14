@@ -152,8 +152,8 @@ const genTimedLayout = (gameType) => {
     const prevGuessDisplay = document.createElement('div')
     const prevGuessAcc = document.createElement('div')
     const fillBox = document.createElement('div')
-    const plyrInfo = document.createElement('div')
-    const rndInfo = document.createElement('div')
+    const plyrInfo = document.createElement('p')
+    const rndInfo = document.createElement('p')
     const prmpt = document.createElement('div')
     const timeDisplay = document.createElement('div')
     const plyrGuess = document.createElement('input')
@@ -699,7 +699,7 @@ const genTimedLayout = (gameType) => {
     gameCtnr.style.background = 'linear-gradient(60deg, var(--clr-drk-1) 10%, var(--clr-drk-2) 70%, var(--clr-drk-2))'
     if(gameType === 'pvp') {timeDisplay.innerText = '00:30.000'}
     if(gameType === 'spd') {timeDisplay.innerText = '00:00.000'}
-    if(gameType !== 'prac') {plyrInfo.innerText = `${plyrOne.name}! Please start your timer to begin`}
+    if(gameType !== 'prac') {plyrInfo.innerText = `${plyrOne.name}! Please start your timer to begin.`}
     prmpt.innerText = 'Guess the color that appears to the right of the screen.'
     if(gameType !== 'prac'){rndStart.innerText = 'Start Timer'}
     if(gameType === 'prac'){rndStart.innerText = 'Start Practice'}
