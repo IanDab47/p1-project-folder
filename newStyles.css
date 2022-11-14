@@ -1,0 +1,30 @@
+/* ASSET FONTS */
+/* MINECRAFT */
+@font-face {
+  font-family: Minecraft;
+  src: url('./assets/fonts/MinecraftRegular-Bmg3.otf') format('opentype');
+}
+@font-face {
+  font-family: Minecraft;
+  font-style: italic;
+  src: url('./assets/fonts/MinecraftItalic-R8Mo.otf') format('opentype');
+}
+@font-face {
+  font-family: Minecraft;
+  font-weight: bold;
+  src: url('./assets/fonts/MinecraftBold-nMK1.otf') format('opentype');
+}
+@font-face {
+  font-family: Minecraft;
+  font-weight: bold;
+  font-style: italic;
+  src: url('./assets/fonts/MinecraftBoldItalic-1y1e.otf') format('opentype');
+}
+
+/* GOOGLE FONTS */
+/* SILKSCREEN */
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
+/* LATO */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+/* PRESS START 2P */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
