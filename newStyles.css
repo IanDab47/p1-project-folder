@@ -329,9 +329,10 @@ footer {
   background: linear-gradient(-80deg, var(--clr-lig-2), var(--clr-lig-1) 60%);
 }
 
-.player-guess {
+input.player-guess {
   font-size: clamp(1rem, 4.5vw, 4rem);
   width: 67%;
+  border: .15rem inset lightslategrey;
   padding: 0;
   margin-top: 1rem;
   margin-right: 3%;
