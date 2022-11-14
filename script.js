@@ -725,7 +725,7 @@ const genTimedLayout = (gameType) => {
     prevGuessDisplay.append(prevGuessAcc)
     pracCtnr.append(prevGuessDisplay, prevClrDisplay)
     plyrGuessForm.append(plyrGuess, rndEnd)
-    fillBox.append(plyrInfo, rndStart, rndInfo, prmpt, plyrGuessForm, btnCtnr)
+    fillBox.append(rndStart, plyrInfo, rndInfo, prmpt, plyrGuessForm, btnCtnr)
     gameCtnr.append(clrBG, fillBox, timeDisplay, pracCtnr)
     
     // Start game after Timer clicked
