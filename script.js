@@ -393,7 +393,7 @@ const genTimedLayout = (gameType) => {
                     highscoreScore.classList.add('highscore-list')
 
                     // Generate text for highscores
-                    highscoreScore.innerText = `${index + 1}.${highscores.name[index]} Time:${zeroPad(Math.floor(time / 100000),2)}:${zeroPad(Math.floor(time / 1000 % 100),2)}.${zeroPad(time % 1000, 3)} Score:${highscores.guessAcc[index]}%`
+                    highscoreScore.innerText = `${index + 1}. ${highscores.name[index]} | Time:${zeroPad(Math.floor(time / 100000),2)}:${zeroPad(Math.floor(time / 1000 % 100),2)}.${zeroPad(time % 1000, 3)} | Score:${highscores.guessAcc[index]}%`
 
                     plyrOneCtnr.append(highscoreScore)
                 })

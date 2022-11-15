@@ -172,8 +172,7 @@ button:is(:hover, :focus, :focus-within, :active) {
   transition: all 120ms ease-in-out;
 }
 
-.home-button:hover,
-.home-button:focus {
+.home-button:is(:hover, :focus, :focus-within) {
   width: 27rem;
   font-size: 1.9rem;
   color: var(--fnt-clr, currentColor);
@@ -375,45 +374,45 @@ input.player-guess {
 }
 
 .end-display-container {
-  width: 55%; height: 80%;
+  width: clamp(18rem, 90%, 55rem); height: calc(60% + 5vw);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-content: center;
+  isolation: isolate;
+  background: radial-gradient(var(--clr-lig-act) 80%, var(--shdw-lig-act));
   border: 5px solid var(--clr-drk-2);
   border-radius: 4vh;
   box-shadow: inset 0 0 .5em .2em var(--shdw-lig-act);
-  background: radial-gradient(var(--clr-lig-act) 80%, var(--shdw-lig-act));
   padding: 3rem;
-  isolation: isolate;
 }
 
 .end-display-text {
   display: block;
-  font-size: 3.7rem; 
+  font-size: clamp(2rem, 4.5vw, 3.7rem); 
   text-align: center;
   color: black;
 }
 
 .player-display-container {
   display: flex;
-  gap: 12vw;
+  gap: clamp(1.5rem, calc(20vw - 10rem), 12rem);
   justify-content: center;
   align-content: flex-start;
   font-family: 'lato', sans-serif;
-  font-size: 1.8em; 
+  font-size: clamp(1em, 2.5vw, 1.8em); 
   font-weight: 400;
   z-index: -1;
 }
   .player-one-info {
       display: flex;
-      gap: 25px;
+      gap: 1.2em;
       flex-direction: column;
       align-items: center;
   }
   .player-two-info {
       display: flex;
-      gap: 25px;
+      gap: 1.2em;
       flex-direction: column;
       align-items: center;
   }
@@ -421,17 +420,17 @@ input.player-guess {
 .leave-text,
 .leave-text-speed {
   display: block;
-  font-size: 1em;
+  font-size: 1.2em;
   color: var(--clr-drk-1);
   text-align: center;
 }
 
 .highscore-list {
-    font-family: 'press start 2p', monospace;
-    font-size: 1.3rem;
-    line-height: 30px;
-
-    transform: scale(.95,1.1);
+  width: 100%;
+  font-family: Minecraft, monospace;
+  font-size: clamp(.8rem, calc(3.5vw), 2rem);
+  line-height: clamp(.5rem, 2.5vw, 1.6rem);
+  text-align: justify;
 }
 
 .previous-display-container {
@@ -468,6 +467,10 @@ input.player-guess {
   
   .title > h1:nth-child(2) {
     margin-block: 8.7vw;
+  }
+  
+  .home-button:is(:hover, :focus, :focus-within) {
+    width: 97vw;
   }
 
   .created-by {
@@ -509,5 +512,10 @@ input.player-guess {
 
   input.player-guess {
     height: 3.75rem;
+    font-size: 1.6em;
+  }
+
+  .end-display-container {
+    padding: 5vh .5em;
   }
 }
