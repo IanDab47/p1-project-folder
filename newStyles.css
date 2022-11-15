@@ -518,4 +518,14 @@ input.player-guess {
   .end-display-container {
     padding: 5vh .5em;
   }
+
+  .previous-display-container {
+    top: 0; bottom: initial;
+    width: 33%;
+    flex-direction: column;
+  }
+
+  .previous-display-container > * {
+    width: 100%;
+  }
 }
