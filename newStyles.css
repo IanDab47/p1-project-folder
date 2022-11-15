@@ -168,8 +168,8 @@ canvas {
 
 .home-button {
   width: 18rem;
-  background: var(--clr-drk-2);
   font-size: 1.4rem;
+  background: var(--clr-drk-2);
   border: none; border-radius: 2em;
   box-shadow: 0 0 .3em var(--clr-drk-2);
   padding: 0.7em 2.4em;
@@ -495,8 +495,9 @@ input.player-guess {
   overflow: clip;
   isolation: isolate;
   font-family: silkscreen, monospace;
-  font-size: 1.6em;
+  font-size: clamp(.9rem, calc(.8vw + .6em), 1.6em);
   font-weight: bold;
+  letter-spacing: -.05em;
   line-height: 1.4em;
   border-radius: .4rem;
   padding: 5px 1em;
@@ -564,15 +565,6 @@ input.player-guess {
   z-index: -1;
 }
 
-.lives-display::before {
-  content: '';
-  position: absolute;
-  top: -2.1vh; left: -1.5vw;
-  width: 95vw; height: calc(95vh * .725);
-  background: #432;
-  z-index: -1;
-}
-
 .end-adventure-container {
   position: absolute;
   width: 100vmax; height: 100%;
@@ -614,6 +606,15 @@ input.player-guess {
   user-select: none;
 }
 
+.lives-display::before {
+  content: '';
+  position: absolute;
+  top: -2.1vh; left: -1.5vw;
+  width: 95vw; height: calc(95vh * .725);
+  background: #432;
+  z-index: -1;
+}
+
 /* MOBILE */
 @media (max-width: 640px) {
   /* HOME PAGE */
@@ -623,6 +624,23 @@ input.player-guess {
   
   .title > h1:nth-child(2) {
     margin-block: 8.7vw;
+  }
+
+  .home-button-container > label:nth-of-type(3) > div {
+    position: relative;
+    background: var(--clr-drk-1);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .home-button-container > label:nth-of-type(3) > div::after {
+    content: 'NOT ON MOBILE';
+    position: absolute;
+    top: 50%; left: 0;
+    width: 100%; height: 100%;
+    font-size: 1.5em;
+    color: var(--clr-red);
+    transform: translateY(-33%) rotate(-4deg);
   }
   
   .home-button:is(:hover, :focus, :focus-within) {
