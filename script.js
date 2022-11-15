@@ -332,6 +332,7 @@ const genTimedLayout = (gameType) => {
             // Assign name values for scores
             plyrName.innerText = `${player.name}`
             plyrName.style.fontWeight = '700'
+            plyrName.style.textDecoration = 'underline'
             
             // Generate total Accuracy for player object(s)
             if(player === plyrTwo) {plyrTwo.calcTotalAcc()}
@@ -428,6 +429,7 @@ const genTimedLayout = (gameType) => {
         }
         // Append elements to corresponding containers
         menuCtnr.style.zIndex = 10
+        menuCtnr.style.background = 'rgb(0 0 0 / .5)'
         finishText.innerText = 'Click to Continue'
         winCtnr.append(plyrCtnr, finishText)
         menuCtnr.append(winCtnr)
