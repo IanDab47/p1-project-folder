@@ -134,7 +134,6 @@ button:is(:hover, :focus, :focus-within, :active) {
 canvas {
   position: relative;
   width: 100%; height: 72.5%;
-  background: #432;
   box-shadow: inset 0 0 1em rgb(0 0 0 / .1);
 }
 
@@ -555,18 +554,28 @@ input.player-guess {
 .hex-display {
   position: absolute;
   bottom: 7%;
-  width: 100%;
+  width: 95%;
   font-family: 'press start 2p', monospace;
   font-size: 1.7em;
   color: white;
   user-select: none;
   pointer-events: none;
   text-align: center;
+  z-index: -1;
+}
+
+.lives-display::before {
+  content: '';
+  position: absolute;
+  top: -2.1vh; left: -1.5vw;
+  width: 95vw; height: calc(95vh * .725);
+  background: #432;
+  z-index: -1;
 }
 
 .end-adventure-container {
   position: absolute;
-  width: 100vmax; height: 100vh;
+  width: 100vmax; height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center; align-items: center;
