@@ -781,9 +781,12 @@ const genAdventureLayout = () => {
     gameCtnr.append(rndText)
     
     // Give 2D functionality and proper resolution
+    console.log(window.innerWidth * .95 + 'px')
+    console.log(window.innerHeight * .95 * .725 + 'px')
+    
     const ctx = canvas.getContext('2d')
-    canvas.setAttribute('height', getComputedStyle(canvas).height)
-    canvas.setAttribute('width', getComputedStyle(canvas).width)
+    canvas.setAttribute('height', window.innerHeight * .95 * .725 + 'px')
+    canvas.setAttribute('width', window.innerWidth * .95 + 'px')
     
     // Add any neccessary styling
     advCtnr.classList.add('adventure-container')
@@ -840,7 +843,7 @@ const genAdventureLayout = () => {
             ctx.fillRect(this.x, this.y += this.speed, this.width, this.height)
         }
     }
-    let plyr = new Adventurer(canvas.width / 2 - 25, 870, 50, 50, '#3d3', '#2a2')
+    let plyr = new Adventurer(canvas.width / 2 - 25, canvas.height - 50, 50, 50, '#3d3', '#2a2')
     let enemy = []
     let bullets = []
     
@@ -889,7 +892,7 @@ const genAdventureLayout = () => {
     // Shoot bullets
     const shoot = (e) => {
         const box = advCtnr.getBoundingClientRect()
-        const xPos = Math.ceil((e.clientX * 1.1) - box.left) - (plyr.width / 2)
+        const xPos = Math.ceil((e.clientX) - box.left) - (plyr.width / 2)
         bullets.push(new Adventurer(xPos + plyr.width/2, plyr.y - 25, 10, 4, 'antiquewhite'))
     }
     canvas.addEventListener('click', shoot)
@@ -1001,7 +1004,7 @@ const genAdventureLayout = () => {
             const xPos = plyr.x
             plyr.render(xPos)
             document.addEventListener('mousemove', function handler(e) {
-                plyr.x = Math.ceil((e.clientX * 1.1) - box.left) - (plyr.width / 2)
+                plyr.x = Math.ceil((e.clientX) - box.left) - (plyr.width / 2)
                 document.removeEventListener('mousemove', handler)
             })
 

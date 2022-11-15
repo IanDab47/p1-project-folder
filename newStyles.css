@@ -42,6 +42,7 @@
 :root {
   font-size: 16px;
   font-family: Minecraft;
+  font-weight: normal;
   --clr-red: #f33;
   --clr-grn: #3d3;
   --clr-blu: #33f;
@@ -128,6 +129,13 @@ button {
 button:is(:hover, :focus, :focus-within, :active) {
   background: rgb(170 170 220 / .4);
   box-shadow: .075rem .075rem 0 .05rem rgb(0 0 0 / .4);
+}
+
+canvas {
+  position: relative;
+  width: 100%; height: 72.5%;
+  background: #432;
+  box-shadow: inset 0 0 1em rgb(0 0 0 / .1);
 }
 
 .title {
@@ -456,6 +464,145 @@ input.player-guess {
   font-size: 1.8em; font-weight: bold;
   padding: .3em .6em;
   text-align: center;
+}
+
+/* ADVENTURE */
+.adventure-container {
+  width: 95vw; height: 95vh;
+  box-shadow: 0 0 2em -1.5em rgb(0 0 0 / .3);
+}
+
+.adventure-info-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; height: 22%;
+  box-shadow: 0 0 2em -1.5em rgb(0 0 0 / .3);
+  margin-bottom: 1%;
+}
+
+.adventure-button-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4%;
+  width: 25%;
+  height: 100%;
+}
+
+.adventure-tutorial {
+  position: relative;
+  width: 73%;
+  height: 100%;
+  overflow: clip;
+  isolation: isolate;
+  font-family: silkscreen, monospace;
+  font-size: 1.6em;
+  font-weight: bold;
+  line-height: 1.4em;
+  border-radius: .4rem;
+  padding: 5px 1em;
+}
+
+.adventure-tutorial::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--clr-drk-act);
+  opacity: .8;
+  z-index: -1;
+}
+
+.adventure-start-button {
+  width: 100%; height: 55%;
+  font-size: 1.4em;
+  margin-block: auto;
+}
+
+.adventure-start-button:hover {
+  background: rgb(170 170 220 / .8);
+  box-shadow:0 0 .8em rgb(0 0 0 / .4);
+  cursor: pointer;
+}
+
+.adventure-start-clicked {
+  width: 100%; height: 55%;
+  background: rgb(30 30 40 / .5);
+  font-size: 1.4em;
+  margin-block: auto;
+}
+
+.adventure-button-container :not(.adventure-start-button, .adventure-start-clicked) {
+  width: 48%;
+  height: 20%;
+  font-size: 1.2rem;
+  margin-top: auto;
+}
+
+.round-display {
+  position: absolute;
+  display: flex;
+  justify-content: center; align-items: center;
+  font-family: 'Minecraft', monospace;
+  font-size: 3em;
+  text-transform: uppercase;
+  color: var(--clr-lig-1);
+  margin-top: 100px;
+  user-select: none;
+  pointer-events: none;
+}
+
+.hex-display {
+  position: absolute;
+  bottom: 7%;
+  width: 100%;
+  font-family: 'press start 2p', monospace;
+  font-size: 1.7em;
+  color: white;
+  user-select: none;
+  pointer-events: none;
+  text-align: center;
+}
+
+.end-adventure-container {
+  position: absolute;
+  width: 100vmax; height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; align-items: center;
+  background: rgb(0 0 0 / .5)
+}
+
+.end-adventure-text {
+  position: relative;
+  top: 10vh;
+  font-family: lato, sans-serif;
+  font-size: 3.3rem; font-weight: 900;
+  color: black;
+}
+
+.player-adventure-container {
+  font-family: lato, sans-serif;
+  font-size: 1.8em; font-weight: 400;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: start;
+  padding-top: -1em;
+  width: 35%; height: 15%;
+  border: 5px solid var(--clr-drk-2);
+  border-radius: 4vh;
+  box-shadow: inset 0 0 .5em .2em var(--shdw-lig-act);
+  background: radial-gradient(var(--clr-lig-act) 80%, var(--shdw-lig-act));
+}
+
+.lives-display {
+  position: absolute;
+  top: 27%; left: 4%;
+  font-family: 'Press Start 2p', monospace;
+  font-size: 2rem;
+  color: white;
+  padding: .8rem 1.2em;
+  user-select: none;
 }
 
 /* MOBILE */
